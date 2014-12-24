@@ -1,0 +1,89 @@
+h1 {
+    padding-top: 25px;
+}
+
+p.intro {
+    font-size: 2.3em;
+    line-height: 1.4289em;
+    margin-bottom: 1em;
+}
+
+.footer {
+    display:block;
+    text-align:center;
+    margin-top: 30px;
+    padding-bottom: 45px;
+    background: url('../images/skulls.png') #e6fb71;
+}
+
+.footer-div {
+    height: 100px;
+}
+header h1 {
+    font-size: 4.4em;
+    padding: 0;
+    text-align: center;
+    line-height : 1.618em;
+    font-family: Georgia, "Times New Roman", serif;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    color: black;
+}
+
+a:hover {
+    color: #e6fb71 !important;
+}
+header span {
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+    display: block;
+    text-align: center;
+    font-size: 26.9px;
+    line-height: 1.618em;
+}
+
+.fancy {
+  line-height: 0.5;
+  text-align: center;
+}
+.fancy span {
+  display: inline-block;
+  position: relative;  
+}
+.fancy span:before,
+.fancy span:after {
+  content: "";
+  position: absolute;
+  height: 5px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  top: 15px;
+  width: 900px;
+}
+.fancy span:before {
+  right: 100%;
+  margin-right: 15px;
+}
+.fancy span:after {
+  left: 100%;
+  margin-left: 15px;
+}
+
+.fancy2 span:before,
+.fancy2 span:after  {
+    top: 25px;
+}
+
+header {
+    margin-bottom: 5em;
+    margin-top: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background: url('../images/skulls.png') #e6fb71;
+    overflow: hidden;
+}
+body {
+  color: #333;
+}
