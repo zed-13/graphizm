@@ -2,12 +2,16 @@
 
 /**
  * Core class to get all conf vars.
- * 
+ *
+ * Singleton implementation.
+ *
  * @author Aurélien
  */
 final class GraphizmCore
 {
-
+    /**
+     * @var GraphizmCore instance called.
+     */
     private static $instance = NULL;
 
     /**
@@ -33,7 +37,7 @@ final class GraphizmCore
      *
      * @param string $environment
      */
-    protected function __construct($environment = "prod")
+    private function __construct($environment = "prod")
     {
         if (!in_array($environment, GraphizmCore::$environments)) {
             $environment = GraphizmCore::$fallbackEnvironment;
@@ -42,13 +46,14 @@ final class GraphizmCore
         try {
             require_once 'conf/' . $environment . '/conf.php';
             GraphizmCore::$conf = $conf;
+            $this->coreInitialization();
         } catch (\Exception $e) {
             // @TODO [Core] : Send an error 500.
         }
     }
 
     /**
-     * Gets current instance
+     * Gets current instance.
      *
      * @param string $environment
      */
@@ -77,5 +82,14 @@ final class GraphizmCore
         }
 
         return $r;
+    }
+
+    /**
+     * Includes all the necessary files.
+     */
+    private function coreInitialization()
+    {
+        require_once 'Templater/GraphizmTemplater.php';
+        require_once 'Gallery/GraphizmGallery.php';
     }
 }

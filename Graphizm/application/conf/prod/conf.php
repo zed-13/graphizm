@@ -5,6 +5,7 @@ $conf = array(
     "menu" => "Accueil",
     "subtitle" => "Arts graphiques by Zed",
     "picture" => "resources/images/mad1.png",
+    "path" => dirname(dirname(__DIR__)),
     "introtext" => "GraphiZm, site personnel où j'expose mes créations et les oeuvres qui m'intéressent. Styles différents, souvent décalés, et toujours un même objectif: laisser libre cours à l'imagination. ",
     "menu_content" => array(
         array(

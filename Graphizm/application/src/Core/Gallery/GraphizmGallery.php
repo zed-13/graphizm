@@ -12,7 +12,7 @@
 class Gallery
 {
     /**
-     * @var string PAth of the gallery
+     * @var string Path of the gallery
      */
     private $path;
 
