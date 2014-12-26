@@ -9,7 +9,7 @@
  * @TODO this entire file is a remnant from previous versions.
  *
  */
-class Gallery
+class Gallery extends TemplateDefiner
 {
     /**
      * @var string Path of the gallery
@@ -72,6 +72,18 @@ class Gallery
     }
 
     /**
+     * Defined templates.
+     */
+    public function defineTemplates()
+    {
+        $this->templates = array(
+            "gallery-single" => "src/Core/Gallery/resources/views/Gallery-single.tpl.php",
+            "gallery-menu" =>  "src/Core/Gallery/resources/views/Gallery-menu.tpl.php",
+            "gallery-thumbnail" => "src/Core/Gallery/resources/views/Gallery-thumbnail.tpl.php",
+        );
+    }
+
+    /**
      * TODO
      * Permet d'afficher toutes les images dans tous les répertoires de galeries
      *
@@ -89,12 +101,14 @@ class Gallery
         $taille = sizeof($all);
         
         for ($i = 0; $i < $taille; $i ++) {
+            // @Remark : done.
             $resultat .= '
 				<input onclick=\'toto("' . htmlentities(str_replace(' ', '_', $all[$i])) . '");\' type="checkbox" id="' . htmlentities(str_replace(' ', '_', $all[$i])) . '_check" value="' . htmlentities(str_replace(' ', '_', $all[$i])) . '" checked="checked" />
 				<a href="#' . htmlentities(str_replace(' ', '_', $all[$i])) . '_" onclick="checker(this);" title="Voir cette galerie" class="' . htmlentities(str_replace(' ', '_', $all[$i])) . '" >' . htmlentities($all[$i]) . '</a> | ';
         }
         
         for ($i = 0; $i < $taille; $i ++) {
+            // @Remark : done.
             $resultat .= "
 				<h2 class=\"gcaption\" id=\"" . htmlentities(str_replace(' ', '_', $all[$i])) . "_\">GALERIE - " . htmlentities($all[$i]) . "<span style='float:right;'><a href=\"#\" style=\"text-decoration:none;\" title=\"Haut de page\">&spades;</a></span></h2>" . $this->display_gallery($all[$i], $with_gen, $retour) . '<div style="clear:both;"></div>';
         }
@@ -123,13 +137,13 @@ class Gallery
         $data = $this->get_all_files();
         $int_tdata = sizeof($data);
         if (! empty($int_tdata)) {
-            
+            // @Remark: template done.
             $code .= "
-		<div id=\"" . htmlentities(str_replace(' ', '_', $this->name)) . "\" class=\"gallery\">
-		
-		<div class=\"lecentreur\">
-		";
+        <div id=\"" . htmlentities(str_replace(' ', '_', $this->name)) . "\" class=\"gallery\">
+        <div class=\"lecentreur\">
+        ";
             for ($i = 0; $i < $int_tdata; $i ++) {
+                // @Remark : template done. 
                 $a = substr($data[$i], 0, - 4);
                 $code .= "
 					<a href=\"" . _Site_ . "/Galleries/" . $this->name . "/" . $data[$i] . "\" title=\"" . $a . "\" rel=\"shadowbox[" . $this->name . "]\">
