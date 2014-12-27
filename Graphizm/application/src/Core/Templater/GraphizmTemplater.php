@@ -12,7 +12,7 @@ final class GraphizmTemplater extends TemplateDefiner
     /**
      * @var GraphizmHelper Instance
      */
-    private $instance = NULL;
+    private static $instance = NULL;
 
     /**
      * @var bool Set the define template only if at FALSE.

@@ -17,8 +17,8 @@ abstract class TemplateDefiner implements TemplateDefinerInterface
      */
     public function addToRegister()
     {
-        foreach ($this->templates as $a_template) {
-            GraphizmTemplater::instance()->addTemplate($a_template);
+        foreach ($this->templates as $k => $a_template) {
+            GraphizmTemplater::instance()->addTemplate(array($k => $a_template));
         }
     }
 
