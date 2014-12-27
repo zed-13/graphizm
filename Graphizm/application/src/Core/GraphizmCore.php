@@ -89,6 +89,7 @@ final class GraphizmCore
      */
     private function coreInitialization()
     {
+        require_once 'Translator/Translator.php';
         require_once 'Templater/GraphizmTemplater.php';
         require_once 'Gallery/GraphizmGallery.php';
     }

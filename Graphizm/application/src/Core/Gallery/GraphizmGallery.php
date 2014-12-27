@@ -4,9 +4,10 @@
  * From a path, list all the picture in the directory.
  * 
  * Create a thumbnail for each picture, if necessary.
+ * Important notice : this class can only be used with low number of pictures to display.
+ * For huge volume of data, use another libray or use lazy loading.
  * 
  * @author Aurélien
- * @TODO this entire file is a remnant from previous versions.
  *
  */
 class Gallery extends TemplateDefiner
@@ -34,34 +35,6 @@ class Gallery extends TemplateDefiner
     private $base_template_detail;
 
     /**
-     *
-     * @var array $include le code CSS, et autres....
-     */
-    public $includes = array(
-        'style_declaration' => '
-            .gcaption{background:#343434;color:#EFEFEF;padding:5px;margin-top: 10px;}
-            .gallery{float:left;line-height:0px;padding:5px;margin:auto;width:98%;}
-            .gallery a{opacity:0.2;filter:alpha(opacity=20);}
-            .gallery a:hover, .gallery a:focus{opacity:1;filter:alpha(opacity=100);}
-            .lecentreur{text-align:center;width:100%;display:inline-block;}
-            .lecentreur a{text-decoration:none;}
-        ',
-        'script_declaration' => '
-            function chkbx_init(){
-                $("input:checkbox").each(function(i){if($(this).is(":checked")){}else{toto($(this).attr("value"));}});
-            }
-            $(function(){$("a").tipTip();chkbx_init();});
-            function toto(o){$("#" + o).toggle();$("#" + o + "_").toggle();}
-            function checker(o){
-                var id_base = "#" + $(o).attr("class");
-                $(id_base + "_check").attr("checked","checked");
-                $(id_base).show();
-                $(id_base + "_").show();
-            }
-        '
-    );
-
-    /**
      * Default constructor.
      *
      * @param array $conf
@@ -84,34 +57,44 @@ class Gallery extends TemplateDefiner
     }
 
     /**
-     * TODO
-     * Permet d'afficher toutes les images dans tous les répertoires de galeries
-     *
-     * @param bool $with_gen
-     *            si on doit générer les miniatures
-     * @param int $retour
-     *            0 pour un affichage direct, 1 pour un retour string
-     * @return mixed le code
-     *        
+     * Displays all the galleries, in the given directory.
+     * 
+     * @return string
+     *   code displaying the gallery.
      */
-    public function display_all_galleries($with_gen = TRUE, $retour = 0)
+    public function displayAllGalleries($withGen = FALSE)
     {
         $resultat = '|';
         $all = $this->get_all_galleries_names();
         $taille = sizeof($all);
-        
+
+        // Menu generation.
         for ($i = 0; $i < $taille; $i ++) {
-            // @Remark : done.
-            $resultat .= '
-				<input onclick=\'toto("' . htmlentities(str_replace(' ', '_', $all[$i])) . '");\' type="checkbox" id="' . htmlentities(str_replace(' ', '_', $all[$i])) . '_check" value="' . htmlentities(str_replace(' ', '_', $all[$i])) . '" checked="checked" />
-				<a href="#' . htmlentities(str_replace(' ', '_', $all[$i])) . '_" onclick="checker(this);" title="Voir cette galerie" class="' . htmlentities(str_replace(' ', '_', $all[$i])) . '" >' . htmlentities($all[$i]) . '</a> | ';
+            $base = htmlentities(str_replace(' ', '_', $all[$i]));
+            $r = array(
+                "name_js" => $base,
+                "name_id" => $base . '_check',
+                "name_value" => $base,
+                "name_href" => $base .'_',
+                "title" => t("Voir cette galerie"),
+                "name_class" => $base,
+                "name" => htmlentities($all[$i]),
+            );
+            $resultat .= GraphizmTemplater::instance()->theme('gallery-menu', $r);
         }
-        
+
+        // Galleries generation.
         for ($i = 0; $i < $taille; $i ++) {
-            // @Remark : done.
-            $resultat .= "
-				<h2 class=\"gcaption\" id=\"" . htmlentities(str_replace(' ', '_', $all[$i])) . "_\">GALERIE - " . htmlentities($all[$i]) . "<span style='float:right;'><a href=\"#\" style=\"text-decoration:none;\" title=\"Haut de page\">&spades;</a></span></h2>" . $this->display_gallery($all[$i], $with_gen, $retour) . '<div style="clear:both;"></div>';
+            $r = array(
+                "gallery_name" => t("GALERIE") ." - " . htmlentities($all[$i]),
+                "name_id" => htmlentities(str_replace(' ', '_', $all[$i])) . "_",
+                "title" => t("Haut de page"),
+                "div_id" => htmlentities(str_replace(' ', '_', $all[$i])),
+                "a_gallery_code" => $this->display_gallery($all[$i], $with_gen),
+            );
+            $resultat .= GraphizmTemplater::instance()->theme("gallery-single", $r);
         }
+
         return $resultat;
     }
 
@@ -134,7 +117,7 @@ class Gallery extends TemplateDefiner
         
         // Déclaration des variables
         $code = '';
-        $data = $this->get_all_files();
+        $data = $this->getAllFiles();
         $int_tdata = sizeof($data);
         if (! empty($int_tdata)) {
             // @Remark: template done.
@@ -227,7 +210,7 @@ class Gallery extends TemplateDefiner
             }
             
             // On récupère les fichiers images
-            $res = $this->get_all_files();
+            $res = $this->getAllFiles();
             $t_res = sizeof($res);
             
             // On créé la miniature si elle n'existe pas déjà
@@ -247,7 +230,7 @@ class Gallery extends TemplateDefiner
      */
     protected function create_directory($str_name, $str_path = '')
     {
-        // Créée un répertoire en 755
+        // Create a directory with 755 permissions.
         $p = $this->path;
         if ($str_path != '') {
             $p .= $str_path . DS;
@@ -262,7 +245,7 @@ class Gallery extends TemplateDefiner
      * @return array le nom des fichiers images
      *        
      */
-    protected function get_all_files()
+    protected function getAllFiles()
     {
         $i = 0;
         $res = array();
