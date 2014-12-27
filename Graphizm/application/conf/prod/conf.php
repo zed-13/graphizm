@@ -6,6 +6,9 @@ $conf = array(
     "subtitle" => "Arts graphiques by Zed",
     "picture" => "resources/images/mad1.png",
     "path" => dirname(dirname(__DIR__)),
+    "galleries_basedir" => dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . "resources" . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR . "galleries" . DIRECTORY_SEPARATOR,
+    "path_thumbnail_template" => "src/Core/Gallery/resources/template",
+    "template_name_default" => "square",
     "introtext" => "GraphiZm, site personnel où j'expose mes créations et les oeuvres qui m'intéressent. Styles différents, souvent décalés, et toujours un même objectif: laisser libre cours à l'imagination. ",
     "menu_content" => array(
         array(
