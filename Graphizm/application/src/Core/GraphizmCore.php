@@ -33,6 +33,12 @@ final class GraphizmCore
     private static $conf = array();
 
     /**
+     * Files to include.
+     * @var array Each cell is a full html code to include the file.
+     */
+    private $files = array("css" => array(), "js" => array());
+
+    /**
      * Constructor deactivated so that only one instance is running.
      *
      * @param string $environment
@@ -67,6 +73,28 @@ final class GraphizmCore
     }
 
     /**
+     * Main method to be called.
+     *
+     * @param string $action
+     *   Action to do - main controller function.
+     */
+    public function launch($action = "gallery") {
+        // @TODO.
+        switch ($action) {
+            case "gallery":
+                $a = new GraphizmGallery();
+                echo $a->displayAllGalleries();
+            break;
+
+            case "contact":
+            break;
+
+            default:
+            break;
+        }
+    }
+
+    /**
      * Gets a variable.
      *
      * @param string $key
@@ -83,6 +111,57 @@ final class GraphizmCore
 
         return $r;
     }
+    
+    /**
+     * Adds js & css files.
+     * @TODO: weight.
+     * @param array $files
+     *   array of arrays(
+     *     'type'=> "css" | "js" | "raw_js" | "raw_css,
+     *     'path' => path to the file or content if raw_*,
+     *     'weight' => order of file inclusion, (min to max)
+     *   );
+     */
+    public function addFiles($files)
+    {
+        foreach ($files as $a_file) {
+            if (isset($a_file["type"])) {
+                switch ($a_file["type"]) {
+                    case "raw_css":
+                        array_push($this->files["css"], '<style>' . $a_file["path"] . '</style>');
+                    break;
+
+                    case "raw_js":
+                        array_push($this->files["js"], '<script>' . $a_file["path"] . '</script>');
+                    break;
+
+                    case "css":
+                        array_push($this->files['css'], '<link rel="stylesheet" href="' . $a_file['path'] . '">');
+                    break;
+
+                    case "js":
+                        array_push($this->files["js"], '<script src="' . $a_file["path"] . '"></script>');
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Get CSS files. Raw echo on each of them is ok.
+     */
+    public function getCSS()
+    {
+        return $this->files['css'];
+    }
+
+    /**
+     * Get JS files. Raw echo on each of them is ok.
+     */
+    public function getJS()
+    {
+        return $this->files['js'];
+    }
 
     /**
      * Includes all the necessary files.
@@ -92,5 +171,12 @@ final class GraphizmCore
         require_once 'Translator/Translator.php';
         require_once 'Templater/GraphizmTemplater.php';
         require_once 'Gallery/GraphizmGallery.php';
+    }
+
+    /**
+     * Function used to route the application.
+     */
+    private function router() {
+        // @TODO.
     }
 }

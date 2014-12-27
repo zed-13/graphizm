@@ -85,10 +85,11 @@
                     </div>
                   </div>
               </div>
-              
               <!-- Content zone -->
               <div id="content-zone">
-                @TODO - Display galleries and so on.
+                <?php
+                    $core->launch();
+                ?>
               </div>
         </div>
     </div>
@@ -117,9 +118,21 @@
         </div>
     </div>
 
+    <?php
+      $f = $core->getCSS();
+      foreach($f as $c):
+        echo $c;
+      endforeach;
+    ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
     <script src="resources/js/documentready.js" ></script>
+    <?php
+      $f = $core->getJS();
+      foreach($f as $c):
+        echo $c;
+      endforeach;
+    ?>
   </body>
 </html>
