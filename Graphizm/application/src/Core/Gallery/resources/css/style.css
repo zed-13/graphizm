@@ -32,3 +32,11 @@
 .lecentreur a {
     text-decoration:none;
 }
+
+.no-gallery {
+    padding: 15px;
+    border: 2px solid dotted black;
+    background: #EFEFEF;
+    font-size: 18px;
+    color: #343434;
+}

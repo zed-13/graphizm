@@ -10,8 +10,13 @@
  * @author Aurélien
  *
  */
-class Gallery extends TemplateDefiner
+class GraphizmGallery extends TemplateDefiner
 {
+    /**
+     * @var bool says if we have to load js and css files.
+     */
+    static protected $js_and_css_loaded = FALSE;
+
     /**
      * @var string default path of the gallery.
      */
@@ -47,10 +52,13 @@ class Gallery extends TemplateDefiner
      *
      * @param array $conf
      */
-    public function __construct($conf)
+    public function __construct($conf = array())
     {
-        $this->path = GraphizmCore::instance()->gvar("galleries_basedir");
+        $this->basePath = GraphizmCore::instance()->gvar("galleries_basedir");
         $this->template_name = GraphizmCore::instance()->gvar("template_name_default");
+        $this->defineTemplates();
+        $this->addToRegister();
+        $this->loadJSCSS();
     }
 
     /**
@@ -62,6 +70,7 @@ class Gallery extends TemplateDefiner
             "gallery-single" => "src/Core/Gallery/resources/views/Gallery-single.tpl.php",
             "gallery-menu" =>  "src/Core/Gallery/resources/views/Gallery-menu.tpl.php",
             "gallery-thumbnail" => "src/Core/Gallery/resources/views/Gallery-thumbnail.tpl.php",
+            "no-gallery" => "src/Core/Gallery/resources/views/No-Gallery.tpl.php",
         );
     }
 
@@ -73,35 +82,43 @@ class Gallery extends TemplateDefiner
      */
     public function displayAllGalleries($withGen = FALSE)
     {
-        $resultat = '|';
-        $all = $this->get_all_galleries_names();
+        $resultat = "";
+        $all = $this->getAllGalleriesNames();
         $taille = sizeof($all);
+        if ($taille > 0) {
+            $resultat = '|';
+            // Menu generation.
+            for ($i = 0; $i < $taille; $i ++) {
+                $base = htmlentities(str_replace(' ', '_', $all[$i]));
+                $r = array(
+                    "name_js" => $base,
+                    "name_id" => $base . '_check',
+                    "name_value" => $base,
+                    "name_href" => $base .'_',
+                    "title" => t("Voir cette galerie"),
+                    "name_class" => $base,
+                    "name" => htmlentities($all[$i]),
+                );
+                $resultat .= GraphizmTemplater::instance()->theme('gallery-menu', $r);
+            }
 
-        // Menu generation.
-        for ($i = 0; $i < $taille; $i ++) {
-            $base = htmlentities(str_replace(' ', '_', $all[$i]));
-            $r = array(
-                "name_js" => $base,
-                "name_id" => $base . '_check',
-                "name_value" => $base,
-                "name_href" => $base .'_',
-                "title" => t("Voir cette galerie"),
-                "name_class" => $base,
-                "name" => htmlentities($all[$i]),
-            );
-            $resultat .= GraphizmTemplater::instance()->theme('gallery-menu', $r);
+            // Galleries generation.
+            for ($i = 0; $i < $taille; $i ++) {
+                $r = array(
+                    "gallery_name" => t("GALERIE") ." - " . htmlentities($all[$i]),
+                    "name_id" => htmlentities(str_replace(' ', '_', $all[$i])) . "_",
+                    "title" => t("Haut de page"),
+                    "div_id" => htmlentities(str_replace(' ', '_', $all[$i])),
+                    "a_gallery_code" => $this->displayGallery($all[$i], $withGen),
+                );
+                $resultat .= GraphizmTemplater::instance()->theme("gallery-single", $r);
+            }
         }
-
-        // Galleries generation.
-        for ($i = 0; $i < $taille; $i ++) {
+        else {
             $r = array(
-                "gallery_name" => t("GALERIE") ." - " . htmlentities($all[$i]),
-                "name_id" => htmlentities(str_replace(' ', '_', $all[$i])) . "_",
-                "title" => t("Haut de page"),
-                "div_id" => htmlentities(str_replace(' ', '_', $all[$i])),
-                "a_gallery_code" => $this->displayGallery($all[$i], $withGen),
+                "no_gallery" => t("Aucune galerie n'est présente !"),
             );
-            $resultat .= GraphizmTemplater::instance()->theme("gallery-single", $r);
+            $resultat = GraphizmTemplater::instance()->theme("no-gallery", $r);
         }
 
         return $resultat;
@@ -146,11 +163,11 @@ class Gallery extends TemplateDefiner
      * 
      * @return Array
      */
-    public function get_all_galleries_names()
+    public function getAllGalleriesNames()
     {
         $res = array();
-        $dir = opendir(_BaseRepertoireGalerie_);
-        $dirname = _BaseRepertoireGalerie_;
+        $dir = opendir($this->basePath);
+        $dirname = $this->basePath;
         while ($file = readdir($dir)) {
             if ($file != '.' && $file != '..' && is_dir($dirname . $file)) {
                 $res[] = $file;
@@ -372,9 +389,37 @@ class Gallery extends TemplateDefiner
             $this->h = 100;
         }
     }
+
+    /**
+     * Load JS and CSS files.
+     */
+    protected function loadJSCSS() {
+        if (!GraphizmGallery::$js_and_css_loaded) {
+            GraphizmCore::instance()->addFiles($this->generateFilesToLoad());
+            GraphizmGallery::$js_and_css_loaded = TRUE;
+        }
+    }
+
+    /**
+     * Generates files to load.
+     */
+    protected function generateFilesToLoad() {
+        return array(
+            array(
+                "type" => "js",
+                "path" => "src/Core/Gallery/resources/js/documentready.js",
+                "weight" => "500",
+            ),
+            array(
+                "type" => "css",
+                "path" => "src/Core/Gallery/resources/css/style.css",
+                "weight" => "500",
+            ),
+        );
+    }
 }
 
-class AGallery extends Gallery
+class AGallery extends GraphizmGallery
 {
     protected $name;
 
@@ -398,7 +443,7 @@ class AGallery extends Gallery
      */
     public function launch()
     {
-        $all = $this->get_all_galleries_names();
+        $all = $this->getAllGalleriesNames();
         return $this->displayGallery($this->name) . '<div style="clear:both;"></div>';
     }
 }
