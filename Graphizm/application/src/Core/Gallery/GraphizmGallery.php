@@ -13,26 +13,34 @@
 class Gallery extends TemplateDefiner
 {
     /**
-     * @var string Path of the gallery
+     * @var string default path of the gallery.
      */
-    private $path;
+    protected $basePath;
+
+    /**
+     * @var string default path towards the gallery.
+     */
+    protected $path;
+
+    /**
+     * @var string Default template name of the thumbnail.
+     */
+    protected $template_name;
 
     /**
      * @var int width of thumbnails.
      */
-    private $l;
+    protected $l;
 
     /**
      * @var int height of thumbnails.
      */
-    private $h;
+    protected $h;
 
     /**
-     * @var unknown
+     * @var string current directory processed.
      */
-    private $base_template_list;
-
-    private $base_template_detail;
+    protected $name;
 
     /**
      * Default constructor.
@@ -41,7 +49,8 @@ class Gallery extends TemplateDefiner
      */
     public function __construct($conf)
     {
-        $this->set($template);
+        $this->path = GraphizmCore::instance()->gvar("galleries_basedir");
+        $this->template_name = GraphizmCore::instance()->gvar("template_name_default");
     }
 
     /**
@@ -90,7 +99,7 @@ class Gallery extends TemplateDefiner
                 "name_id" => htmlentities(str_replace(' ', '_', $all[$i])) . "_",
                 "title" => t("Haut de page"),
                 "div_id" => htmlentities(str_replace(' ', '_', $all[$i])),
-                "a_gallery_code" => $this->display_gallery($all[$i], $with_gen),
+                "a_gallery_code" => $this->displayGallery($all[$i], $withGen),
             );
             $resultat .= GraphizmTemplater::instance()->theme("gallery-single", $r);
         }
@@ -110,21 +119,14 @@ class Gallery extends TemplateDefiner
      * @return mixed
      *
      */
-    public function display_gallery($directory, $with_gen = TRUE)
+    public function displayGallery($directory, $with_gen = TRUE)
     {
-        // Initialisation des données
+        // Data initialization.
         $this->init_item($directory, $with_gen);
-        
-        // Déclaration des variables
         $code = '';
         $data = $this->getAllFiles();
         $int_tdata = sizeof($data);
-        if (! empty($int_tdata)) {
-            // @Remark: template done.
-            $code .= "
-        <div id=\"" . htmlentities(str_replace(' ', '_', $this->name)) . "\" class=\"gallery\">
-        <div class=\"lecentreur\">
-        ";
+        if (!empty($int_tdata)) {
             for ($i = 0; $i < $int_tdata; $i ++) {
                 // @Remark : template done. 
                 $a = substr($data[$i], 0, - 4);
@@ -134,8 +136,7 @@ class Gallery extends TemplateDefiner
 					</a>
 					";
             }
-            $code .= "</div>";
-            $code .= "</div>";
+
             return $code;
         }
     }
@@ -155,87 +156,88 @@ class Gallery extends TemplateDefiner
                 $res[] = $file;
             }
         }
-        
         closedir($dir);
         return $res;
     }
 
     /**
-     * Permet d'initialiser les attributs
+     * Initializes all the attributes.
      *
      * @param string $directory
-     *            le nom du répertoire contenant les images
-     * @param bool $with_gen
-     *            si on doit générer les miniatures
+     *   name of the directory to look for pictures.
+     * @param bool $withGen
+     *   TRUE if thumbnails are to be generated.
      */
-    protected function init_item($directory, $with_gen = TRUE)
+    protected function init_item($directory, $withGen = TRUE)
     {
-        $base = _BaseRepertoireGalerie_;
-        
-        // On initialise le chemin contenant les images
+        $base = $this->basePath;
+
+        // Initialization of the path to look into.
         if (file_exists($base . $directory) && is_dir($base . $directory) && is_readable($base . $directory) && is_writable($base . $directory)) {
             $this->path = $base . $directory . DS;
         } else {
             $this->path = $base;
-            $this->create_directory($directory);
+            $this->createDirectory($directory);
             $this->path .= $directory . DS;
         }
-        
         $this->name = $directory;
-        
-        // Si on doit générer les miniatures ou pas...
-        if ($with_gen) {
-            $this->create_all_thumbnails();
+
+        if ($withGen) {
+            $this->createAllThumbnails();
         }
     }
 
     /**
-     * Permet de créer toutes les miniatures du dossier, si n'existe pas déjà
+     * Create all thumbnails in all the directories if necessary.
      *
      * @return none
      */
-    protected function create_all_thumbnails()
+    protected function createAllThumbnails()
     {
         $thumb = $this->path . 'thumbnail' . DS;
-        
-        if (! file_exists($thumb) || ! is_dir($thumb)) {
-            $this->create_directory('thumbnail');
+
+        if (!file_exists($thumb) || !is_dir($thumb)) {
+            $this->createDirectory('thumbnail');
         }
         
         if (is_readable($thumb) && is_writable($thumb)) {
             
             $thumb .= $this->template_name . DS;
-            if (! file_exists($thumb) || ! is_dir($thumb)) {
-                $this->create_directory($this->template_name, 'thumbnail');
+            if (!file_exists($thumb) || !is_dir($thumb)) {
+                $this->createDirectory($this->template_name, 'thumbnail');
             }
-            
-            // On récupère les fichiers images
+
+            // Get all images.
             $res = $this->getAllFiles();
             $t_res = sizeof($res);
-            
-            // On créé la miniature si elle n'existe pas déjà
+
+            // We create the thumbnail if it doesn't exist yet.
             for ($i = 0; $i < $t_res; $i ++) {
-                $this->create_single_thumbnail($res[$i]);
+                $this->createSingleThumbnail($res[$i]);
             }
         }
     }
 
     /**
-     * Permet de créer un répertoire
+     * Create a directory in the given path.
      *
-     * @param string $str_name
-     *            nom du répertoire à créer
-     * @return bool si la création est effectuée
-     *        
+     * @param string $strName
+     *   Name of the directory to create.
+     * @param string $strPath
+     *   Path.
+     *
+     * @return bool
+     *   TRUE if the directory is created successfully.
      */
-    protected function create_directory($str_name, $str_path = '')
+    protected function createDirectory($strName, $strPath = '')
     {
         // Create a directory with 755 permissions.
         $p = $this->path;
-        if ($str_path != '') {
-            $p .= $str_path . DS;
+        if ($strPath != '') {
+            $p .= $strPath . DS;
         }
-        $p .= $str_name;
+        $p .= $strName;
+
         return mkdir($p, 0755);
     }
 
@@ -260,26 +262,26 @@ class Gallery extends TemplateDefiner
                 }
             }
         }
-        
         closedir($dir);
-        
+
         return $res;
     }
 
     /**
-     * Créé une miniature pour un fichier dont le nom a été passé en paramètre
+     * Create a thumbnail for the given file.
      *
      * @param string $filename
-     *            le nom de l'image pour laquelle on va créer la miniature
-     * @return none la miniature est créée
+     *   File name of the image.
+     *   
+     * @return mixed
+     *   none or FALSE if thumbnail creation has failed.
      */
-    protected function create_single_thumbnail($filename)
+    protected function createSingleThumbnail($filename)
     {
         $fc = 2;
         $chemin_image = $this->path . $filename;
-        
+
         if ($this->must_be_created($this->path . 'thumbnail' . DS . $this->template_name . DS . $filename)) {
-            
             list ($src_w, $src_h) = getimagesize($chemin_image);
             $src_x = 0;
             $src_y = 0;
@@ -287,10 +289,10 @@ class Gallery extends TemplateDefiner
             $dst_y = 0;
             $dst_w = $this->l;
             $dst_h = $this->h;
-            
+
             $src_r = $src_w / $src_h;
             $dst_r = $dst_w / $dst_h;
-            
+
             if ($src_r > $dst_r) {
                 $r = $src_h / $dst_h;
                 $src_x += round(($src_w - $this->l * $r) / 2);
@@ -298,23 +300,29 @@ class Gallery extends TemplateDefiner
                 $r = $src_w / $dst_w;
                 $src_y += round(($src_h - $this->h * $r) / 2);
             }
-            
+
             $dst_w = round($src_w / $r);
             $dst_h = round($src_h / $r);
-            
+
             $array_ext = explode('.', $chemin_image);
             $extension = strtolower($array_ext[count($array_ext) - 1]);
-            
-            if ($extension == 'jpg' || $extension == 'jpeg')
+
+            if ($extension == 'jpg' || $extension == 'jpeg') {
                 $img_in = imagecreatefromjpeg($chemin_image);
-            else 
-                if ($extension == 'png')
+            }
+            else {
+                if ($extension == 'png') {
                     $img_in = imagecreatefrompng($chemin_image);
-                else 
-                    if ($extension == 'gif')
+                }
+                else { 
+                    if ($extension == 'gif') {
                         $img_in = imagecreatefromgif($chemin_image);
-                    else
+                    }
+                    else {
                         return false;
+                    }
+                }
+            }
 
             $img_out = imagecreatetruecolor($this->l, $this->h);
             $background_color = imagecolorallocate($img_out, 255, 255, 255);
@@ -351,12 +359,10 @@ class Gallery extends TemplateDefiner
      */
     protected function set_template($number)
     {
-        $path = _PHP_ . 'Gallery' . DS . 'template' . DS . $number . DS . 'Gallery.Template.php';
+        $path = GraphizmCore::instance()->gvar("path_thumbnail_template") . "/" . $number . '/Gallery.Template.php';
         $this->template_name = $number;
         if (file_exists($path)) {
-            
             require_once ($path);
-            
             $this->l = $l;
             $this->h = $w;
             $this->includes['style_declaration'] .= $css;
@@ -393,6 +399,6 @@ class AGallery extends Gallery
     public function launch()
     {
         $all = $this->get_all_galleries_names();
-        return $this->display_gallery($this->name) . '<div style="clear:both;"></div>';
+        return $this->displayGallery($this->name) . '<div style="clear:both;"></div>';
     }
 }
