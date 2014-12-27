@@ -2,7 +2,7 @@
 $conf = array(
     "title" => "GraphiZm | Arts graphiques by Zed",
     "sitename" => "GraphiZm",
-    "menu" => "Accueil",
+    "menu" => "<span class='glyphicon glyphicon-home'> </span>",
     "subtitle" => "Arts graphiques by Zed",
     "picture" => "resources/images/mad1.png",
     "path" => dirname(dirname(__DIR__)),
