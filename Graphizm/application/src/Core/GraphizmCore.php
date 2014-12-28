@@ -171,6 +171,7 @@ final class GraphizmCore
         require_once 'Translator/Translator.php';
         require_once 'Templater/GraphizmTemplater.php';
         require_once 'Gallery/GraphizmGallery.php';
+        require_once 'Contact/GraphizmContact.php';
     }
 
     /**
