@@ -6,7 +6,9 @@
  * Create a thumbnail for each picture, if necessary.
  * Important notice : this class can only be used with low number of pictures to display.
  * For huge volume of data, use another libray or use lazy loading.
- * 
+ *
+ * @TODO : create a command line to launch image generation via CLI.
+ *
  * @author Aurélien
  *
  */
@@ -58,6 +60,7 @@ class GraphizmGallery extends TemplateDefiner
         $this->template_name = GraphizmCore::instance()->gvar("template_name_default");
         $this->defineTemplates();
         $this->addToRegister();
+        $this->setTemplate();
         $this->loadJSCSS();
     }
 
@@ -136,7 +139,7 @@ class GraphizmGallery extends TemplateDefiner
      * @return mixed
      *
      */
-    public function displayGallery($directory, $with_gen = TRUE)
+    public function displayGallery($directory, $with_gen = FALSE)
     {
         // Data initialization.
         $this->init_item($directory, $with_gen);
@@ -145,13 +148,15 @@ class GraphizmGallery extends TemplateDefiner
         $int_tdata = sizeof($data);
         if (!empty($int_tdata)) {
             for ($i = 0; $i < $int_tdata; $i ++) {
-                // @Remark : template done. 
                 $a = substr($data[$i], 0, - 4);
-                $code .= "
-					<a href=\"" . _Site_ . "/Galleries/" . $this->name . "/" . $data[$i] . "\" title=\"" . $a . "\" rel=\"shadowbox[" . $this->name . "]\">
-					<img src=\"" . _Site_ . "/Galleries/" . $this->name . "/thumbnail/" . $this->template_name . "/" . $data[$i] . "\" alt=\"" . $a . "\" />
-					</a>
-					";
+                $r = array(
+                    "a_href" => GraphizmCore::instance()->gvar("galleries_src") . $this->name . "/" . $data[$i],
+                    "title" => $a,
+                    "shadowbox_name" => $this->name,
+                    "img_thumbnail" => $this->getThumbnail($data[$i]),
+                    "alt_thumbnail" => $a,
+                );
+                $code .= GraphizmTemplater::instance()->theme("gallery-thumbnail", $r);
             }
         }
         else {
@@ -159,6 +164,25 @@ class GraphizmGallery extends TemplateDefiner
         }
 
         return $code;
+    }
+
+    /**
+     * Get thumbnail uri.
+     *
+     * @param string $name
+     *   name of the thumbnail
+     *   
+     * @return string
+     *   URI of the thumbnail to display.
+     */
+    public function getThumbnail($name)
+    {
+        $path = GraphizmCore::instance()->gvar("galleries_basedir") . $this->name . DS . "thumbnail" . DS . $this->template_name . DS . $name;
+        $r = GraphizmCore::instance()->gvar("src_thumbnail_template") . $this->template_name . "/placeholder.gif";
+        if (file_exists($path)) {
+            $r = GraphizmCore::instance()->gvar("galleries_src") . $this->name . "/thumbnail/" . $this->template_name . "/" . $name;
+        }
+        return $r;
     }
 
     /**
@@ -215,13 +239,10 @@ class GraphizmGallery extends TemplateDefiner
     protected function createAllThumbnails()
     {
         $thumb = $this->path . 'thumbnail' . DS;
-
         if (!file_exists($thumb) || !is_dir($thumb)) {
             $this->createDirectory('thumbnail');
         }
-        
         if (is_readable($thumb) && is_writable($thumb)) {
-            
             $thumb .= $this->template_name . DS;
             if (!file_exists($thumb) || !is_dir($thumb)) {
                 $this->createDirectory($this->template_name, 'thumbnail');
@@ -298,10 +319,9 @@ class GraphizmGallery extends TemplateDefiner
      */
     protected function createSingleThumbnail($filename)
     {
-        $fc = 2;
         $chemin_image = $this->path . $filename;
 
-        if ($this->must_be_created($this->path . 'thumbnail' . DS . $this->template_name . DS . $filename)) {
+        if ($this->mustBeCreated($this->path . 'thumbnail' . DS . $this->template_name . DS . $filename)) {
             list ($src_w, $src_h) = getimagesize($chemin_image);
             $src_x = 0;
             $src_y = 0;
@@ -353,14 +373,15 @@ class GraphizmGallery extends TemplateDefiner
     }
 
     /**
-     * Retourne vrai si la miniature n'existe pas ou si elle a les mauvaises dimensions
+     * Returns true if thumbnail doesn't exists or if dimension don't fit.
      *
      * @param string $filepath
-     *            le chemin du fichier
-     * @return bool si mauvaise taille ou pas
-     *        
+     *   file path.
+     *
+     * @return bool
+     *   True if has to be created.
      */
-    protected function must_be_created($filepath)
+    protected function mustBeCreated($filepath)
     {
         if (file_exists($filepath)) {
             list ($src_w, $src_h) = getimagesize($filepath);
@@ -377,17 +398,20 @@ class GraphizmGallery extends TemplateDefiner
      *            le numéro (entier) du template
      * @return none
      */
-    protected function set_template($number)
+    protected function setTemplate($number = NULL)
     {
-        $path = GraphizmCore::instance()->gvar("path_thumbnail_template") . "/" . $number . '/Gallery.Template.php';
+        if (empty($number)) {
+            $number = GraphizmCore::instance()->gvar("template_name_default");
+        }
+        $path = GraphizmCore::instance()->gvar("path_thumbnail_template") . $number . '/Gallery.Template.php';
         $this->template_name = $number;
         if (file_exists($path)) {
             require_once ($path);
-            $this->l = $l;
-            $this->h = $w;
-            $this->includes['style_declaration'] .= $css;
+            $this->l = $width;
+            $this->h = $height;
+            GraphizmCore::instance()->addFiles(array("type" => "raw_css", "path" => $css, "weight" => 100));
         } else {
-            $this->includes['style_declaration'] .= '.dark{margin:5px;}';
+            GraphizmCore::instance()->addFiles(array("type" => "raw_css", "path" => '.dark{margin:5px;}', "weight" => 100));
             $this->l = 100;
             $this->h = 100;
         }
@@ -435,7 +459,7 @@ class AGallery extends GraphizmGallery
      */
     public function __construct($template = 1, $name)
     {
-        $this->set_template($template);
+        $this->setTemplate($template);
         $this->name = $name;
     }
 

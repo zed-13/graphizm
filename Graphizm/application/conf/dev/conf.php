@@ -6,9 +6,11 @@ $conf = array(
     "menu" => "<span class='glyphicon glyphicon-home'> </span>",
     "subtitle" => "Arts graphiques by Zed",
     "picture" => "resources/images/mad1.png",
+    "galleries_src" => "resources/images/galleries/",
     "path" => dirname(dirname(__DIR__)),
     "galleries_basedir" => dirname(dirname(__DIR__)) . DS . "resources" . DS . "images" . DS . "galleries" . DS,
-    "path_thumbnail_template" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "template",
+    "path_thumbnail_template" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "template" . DS,
+    "src_thumbnail_template" => "src/Core/Gallery/resources/template/",
     "template_name_default" => "square",
     "introtext" => "GraphiZm, site personnel où j'expose mes créations et les oeuvres qui m'intéressent. Styles différents, souvent décalés, et toujours un même objectif: laisser libre cours à l'imagination. ",
     "menu_content" => array(

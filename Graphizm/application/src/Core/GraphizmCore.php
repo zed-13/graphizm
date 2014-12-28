@@ -83,7 +83,7 @@ final class GraphizmCore
         switch ($action) {
             case "gallery":
                 $a = new GraphizmGallery();
-                echo $a->displayAllGalleries();
+                echo $a->displayAllGalleries(TRUE);
             break;
 
             case "contact":
