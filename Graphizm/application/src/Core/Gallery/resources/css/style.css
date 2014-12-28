@@ -1,6 +1,5 @@
 .gcaption {
-    background:#343434;
-    color:#EFEFEF;
+    color:#DEDEDE;
     padding:5px;
     margin-top: 10px;
 }
@@ -10,7 +9,7 @@
     line-height:0px;
     padding:5px;
     margin:auto;
-    width:98%;
+    width:100%;
 }
 
 .gallery a {
@@ -37,6 +36,26 @@
     padding: 15px;
     border: 2px solid dotted black;
     background: #EFEFEF;
+    color: #343434;
+    line-height: 1em;
+}
+
+.no-gallery-emphase {
+    padding: 15px;
+    border: 2px solid dotted black;
+    background: #EFEFEF;
     font-size: 18px;
     color: #343434;
+}
+
+.gallery-title {
+    font-size: 18px;
+}
+
+.up {
+    color: #787878;
+    text-decoration: none;
+}
+.up:hover {
+    text-decoration: none;
 }

@@ -67,10 +67,10 @@ class GraphizmGallery extends TemplateDefiner
     public function defineTemplates()
     {
         $this->templates = array(
-            "gallery-single" => "src/Core/Gallery/resources/views/Gallery-single.tpl.php",
-            "gallery-menu" =>  "src/Core/Gallery/resources/views/Gallery-menu.tpl.php",
-            "gallery-thumbnail" => "src/Core/Gallery/resources/views/Gallery-thumbnail.tpl.php",
-            "no-gallery" => "src/Core/Gallery/resources/views/No-Gallery.tpl.php",
+            "gallery-single" => "src" . DS . "Core" . DS ."Gallery" . DS . "resources" . DS ."views" . DS . "Gallery-single.tpl.php",
+            "gallery-menu" =>  "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-menu.tpl.php",
+            "gallery-thumbnail" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-thumbnail.tpl.php",
+            "no-gallery" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "No-Gallery.tpl.php",
         );
     }
 
@@ -97,15 +97,15 @@ class GraphizmGallery extends TemplateDefiner
                     "name_href" => $base .'_',
                     "title" => t("Voir cette galerie"),
                     "name_class" => $base,
-                    "name" => htmlentities($all[$i]),
+                    "name_displayed" => htmlentities($all[$i]),
                 );
-                $resultat .= GraphizmTemplater::instance()->theme('gallery-menu', $r);
+                $resultat .= GraphizmTemplater::instance()->theme("gallery-menu", $r);
             }
 
             // Galleries generation.
             for ($i = 0; $i < $taille; $i ++) {
                 $r = array(
-                    "gallery_name" => t("GALERIE") ." - " . htmlentities($all[$i]),
+                    "gallery_name" => t("Galerie") ." - " . htmlentities($all[$i]),
                     "name_id" => htmlentities(str_replace(' ', '_', $all[$i])) . "_",
                     "title" => t("Haut de page"),
                     "div_id" => htmlentities(str_replace(' ', '_', $all[$i])),
@@ -153,9 +153,12 @@ class GraphizmGallery extends TemplateDefiner
 					</a>
 					";
             }
-
-            return $code;
         }
+        else {
+            $code = GraphizmTemplater::instance()->theme("no-gallery", array("no_gallery" => t("Aucune image pour le moment dans cette catégorie !"), "emphase" => FALSE));
+        }
+
+        return $code;
     }
 
     /**

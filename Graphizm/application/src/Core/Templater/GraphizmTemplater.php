@@ -20,6 +20,11 @@ final class GraphizmTemplater extends TemplateDefiner
     private $initDone = FALSE;
 
     /**
+     * @var string template name.
+     */
+    private $templateName = "";
+
+    /**
      * Default constructor.
      */
     private function __construct()
@@ -29,7 +34,8 @@ final class GraphizmTemplater extends TemplateDefiner
     /**
      * Gets current instance.
      *
-     * @param string $environment
+     * @return GraphizmTemplater
+     *   Instance of GraphizmTemplater
      */
     public static function instance()
     {
@@ -51,10 +57,11 @@ final class GraphizmTemplater extends TemplateDefiner
      * @return string
      */
     public function theme($name, $parameters = array()) {
+        $this->templateName = $name;
         extract($parameters);
         $r = '';
-        if (in_array($name, array_keys($this->templates))) {
-            $path = GraphizmCore::instance()->gvar("path") . DIRECTORY_SEPARATOR . $this->templates[$name];
+        if (in_array($this->templateName, array_keys($this->templates))) {
+            $path = GraphizmCore::instance()->gvar("path") . DIRECTORY_SEPARATOR . $this->templates[$this->templateName];
             if (file_exists($path)) {
                 try {
                     ob_start();
