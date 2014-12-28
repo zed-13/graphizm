@@ -39,6 +39,11 @@ final class GraphizmCore
     private $files = array("css" => array(), "js" => array());
 
     /**
+     * @var GraphizmContact
+     */
+    private $contacter = NULL;
+
+    /**
      * Constructor deactivated so that only one instance is running.
      *
      * @param string $environment
@@ -53,6 +58,8 @@ final class GraphizmCore
             require_once 'conf/' . $environment . '/conf.php';
             GraphizmCore::$conf = $conf;
             $this->coreInitialization();
+            // @TODO : config acquiral via conf.
+            $this->setContacter($conf);
         } catch (\Exception $e) {
             // @TODO [Core] : Send an error 500.
         }
@@ -172,6 +179,14 @@ final class GraphizmCore
         require_once 'Templater/GraphizmTemplater.php';
         require_once 'Gallery/GraphizmGallery.php';
         require_once 'Contact/GraphizmContact.php';
+    }
+
+    /**
+     * Sets contacter.
+     */
+    private function setContacter($conf = array())
+    {
+        $this->contacter = GraphizmContact::instance($conf);
     }
 
     /**

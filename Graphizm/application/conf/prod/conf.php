@@ -13,6 +13,10 @@ $conf = array(
     "src_thumbnail_template" => "src/Core/Gallery/resources/template/",
     "template_name_default" => "square",
     "introtext" => "GraphiZm, site personnel où j'expose mes créations et les oeuvres qui m'intéressent. Styles différents, souvent décalés, et toujours un même objectif: laisser libre cours à l'imagination. ",
+    "contact-form" => array(
+        "to" => "random@random.com",
+        "intro" => "Un commentaire ? Un bug ? Laissez-moi votre message !",
+    ),
     "menu_content" => array(
         array(
             "text" => "Mes dessins",
@@ -27,7 +31,10 @@ $conf = array(
         array(
             "text" => "Me contacter",
             "icon" => "glyphicon glyphicon-envelope",
-            "link" => "#"
+            "link" => "javascript:void();",
+            "attributes" => array(
+                "id" => "contact-button-modal",
+            ),
         )
     ),
     "footer" => array(

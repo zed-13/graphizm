@@ -68,7 +68,14 @@
                         <ul class="nav navbar-nav navbar-left">
                         <?php foreach($core->gvar("menu_content") as $menu_element) :?>
                         <li>
-                            <a href="<?php echo (isset($menu_element["link"]))?$menu_element["link"]:"#"; ?>">
+                            <a href="<?php echo (isset($menu_element["link"]))?$menu_element["link"]:"#"; ?>"
+                            <?php if (isset($menu_element["attributes"])):
+                                foreach($menu_element["attributes"] as $k => $v):
+                                    echo " ", $k, "='", $v, "'";
+                                endforeach;
+                            ?>
+                            <?php endif;?>
+                            >
                                 <?php if (isset($menu_element["icon"])):?>
                                     <span class="<?php print $menu_element["icon"]; ?>"></span>
                                 <?php endif;?>
@@ -131,6 +138,10 @@
       foreach($f as $c):
         echo $c;
       endforeach;
+    ?>
+    <?php
+        // Modal contact form.
+        echo GraphizmTemplater::instance()->theme("contact-form", array("intro" => $core->gvar("contact-form")["intro"]));
     ?>
   </body>
 </html>
