@@ -1,7 +1,7 @@
 (function($) {
     "use strict";
 
-    $(document).ready(
+    $(document).ready(function(){
         // @TODO : do stuff.
-    );
+    });
 })(jQuery);
