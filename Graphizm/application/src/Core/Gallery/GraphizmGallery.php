@@ -8,6 +8,7 @@
  * For huge volume of data, use another libray or use lazy loading.
  *
  * @TODO : create a command line to launch image generation via CLI.
+ * @TODO : externalize in another class all the file based methods.
  *
  * @author Aurélien
  *

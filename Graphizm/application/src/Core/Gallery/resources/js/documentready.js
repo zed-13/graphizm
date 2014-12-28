@@ -41,6 +41,5 @@
                 toto($(this).val());
             });
         });
-        $("a").tipTip();
     });
 })(jQuery);

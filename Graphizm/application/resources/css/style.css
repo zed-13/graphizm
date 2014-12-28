@@ -30,9 +30,6 @@ header h1 {
     color: black;
 }
 
-a:hover {
-    color: #e6fb71 !important;
-}
 header span {
     text-transform: uppercase;
     margin: 0;
@@ -86,4 +83,8 @@ header {
 }
 body {
   color: #333;
+}
+
+a:hover, a:focus {
+    color: #e6fb71;
 }

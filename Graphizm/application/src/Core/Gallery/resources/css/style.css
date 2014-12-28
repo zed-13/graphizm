@@ -16,6 +16,7 @@
 .gallery a {
     opacity:0.2;
     filter:alpha(opacity=20);
+    display: inline-block;
 }
 
 .gallery a:hover, .gallery a:focus {

@@ -2,6 +2,6 @@
     "use strict";
 
     $(document).ready(function(){
-        // @TODO : do stuff.
+        $('[data-toggle="tooltip"]').tooltip({"placement": "left"});
     });
 })(jQuery);

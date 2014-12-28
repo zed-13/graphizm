@@ -4,7 +4,7 @@
         <?php echo $gallery_name; ?>
     </span>
     <span style='float:right;'>
-        <a href="#" class="up" title="<?php echo $title; ?>">&spades;</a>
+        <a href="#" data-toggle="tooltip" class="up" title="<?php echo $title; ?>">&spades;</a>
     </span>
 </h2>
 <?php endif;?>
