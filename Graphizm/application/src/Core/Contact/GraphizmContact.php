@@ -49,4 +49,39 @@ class GraphizmContact extends TemplateDefiner
             "contact-form" => "src" . DS . "Core" . DS ."Contact" . DS . "resources" . DS ."views" . DS . "form.tpl.php",
         );
     }
+
+    /**
+     * Sends a mail to target, with message.
+     *
+     * @param string $email
+     *   Email (target).
+     * @param string $message
+     *   Message.
+     *
+     * @return string
+     *   Json encoded array(
+     *      "state" => TRUE|FALSE,
+     *      "messages" => array(),
+     *   );
+     */
+    public function send($email, $message) {
+        // @TODO: send e-mail.
+        $r = array(
+            "state" => TRUE,
+            "messages" => array(),
+        );
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $r["messages"][] = t("Veuillez renseigner votre e-mail.");
+            $r["state"] = FALSE;
+        }
+        if (empty($message)) {
+            $r["messages"][] = t("Renseignez votre message.");
+            $r["state"] = FALSE;
+        }
+        if ($r["state"]) {
+            $r["messages"][] = t("Votre message a été envoyé, j'y répondrai dans les plus brefs délais.");
+        }
+
+        return json_encode($r);
+    }
 }

@@ -81,19 +81,16 @@ final class GraphizmCore
 
     /**
      * Main method to be called.
-     *
-     * @param string $action
-     *   Action to do - main controller function.
      */
-    public function launch($action = "gallery") {
-        // @TODO.
+    public function launch() {
+        $action = $this->router();
         switch ($action) {
             case "gallery":
-                $a = new GraphizmGallery();
-                echo $a->displayAllGalleries(TRUE);
+                echo $this->actionGalleries();
             break;
 
             case "contact":
+                echo $this->actionContact();
             break;
 
             default:
@@ -118,7 +115,7 @@ final class GraphizmCore
 
         return $r;
     }
-    
+
     /**
      * Adds js & css files.
      * @TODO: weight.
@@ -171,6 +168,36 @@ final class GraphizmCore
     }
 
     /**
+     * Action : contact.
+     *
+     * @return string
+     *   state of the email sending
+     */
+    private function actionContact() {
+        $a = GraphizmContact::instance();
+        $email = "";
+        $message = "";
+        if (isset($_POST["email"])) {
+            $email = htmlEntities($_POST["email"], ENT_QUOTES);
+        }
+        if (isset($_POST["message"])) {
+            $message = htmlEntities($_POST["message"], ENT_QUOTES);
+        }
+        return $a->send($email, $message);
+    }
+
+    /**
+     * Action : return galleries.
+     *
+     * @return string
+     *   Galleries code.
+     */
+    private function actionGalleries() {
+        $a = new GraphizmGallery();
+        return $a->displayAllGalleries(TRUE);
+    }
+
+    /**
      * Includes all the necessary files.
      */
     private function coreInitialization()
@@ -191,8 +218,23 @@ final class GraphizmCore
 
     /**
      * Function used to route the application.
+     *
+     * @return string
+     *   functionality to display.
      */
     private function router() {
-        // @TODO.
+        $auth = array(
+            "gallery",
+            "contact",
+        );
+        $r = "gallery";
+        $s = $_POST["state"];
+        if (isset($s)) {
+            if (in_array($s, $auth)) {
+                $r = $s;
+            }
+        }
+
+        return $r;
     }
 }

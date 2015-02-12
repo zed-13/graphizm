@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="form-contactLabel"><?php echo t("Nouveau message"); ?> : </h4>
+        <h4 class="modal-title" id="form-contactLabel"><?php echo t("Me contacter"); ?></h4>
       </div>
       <div class="modal-body">
         <div class="info">
@@ -13,10 +13,11 @@
                 endif;
             ?>
         </div>
+        <div id="form-contact-msg"></div>
         <form>
           <div class="form-group">
             <label for="recipient-name" class="control-label"><?php echo t("Votre adresse e-mail");?> : </label>
-            <input type="text" class="form-control" id="recipient-name">
+            <input type="text" class="form-control" id="email-field">
           </div>
           <div class="form-group">
             <label for="message-text" class="control-label"><?php echo t("Message"); ?> : </label>
@@ -26,7 +27,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo t("Fermer"); ?></button>
-        <button type="button" class="btn btn-primary"><?php echo t("Envoyer le message"); ?></button>
+        <button type="button" id="send-email-btn" class="btn btn-primary"><?php echo t("Envoyer le message"); ?></button>
       </div>
     </div>
   </div>
