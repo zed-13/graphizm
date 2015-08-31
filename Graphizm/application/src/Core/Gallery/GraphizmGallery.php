@@ -90,7 +90,7 @@ class GraphizmGallery extends TemplateDefiner
         $all = $this->getAllGalleriesNames();
         $taille = sizeof($all);
         if ($taille > 0) {
-            $resultat = '|';
+            $resultat = '';
             // Menu generation.
             for ($i = 0; $i < $taille; $i ++) {
                 $base = htmlentities(str_replace(' ', '_', $all[$i]));

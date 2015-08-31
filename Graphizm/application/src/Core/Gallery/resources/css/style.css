@@ -57,7 +57,22 @@
 .up {
     color: #787878;
     text-decoration: none;
+    padding-right: 15px;
 }
 .up:hover {
     text-decoration: none;
+}
+
+.checkcheckcheck-yourbooty {
+    color: #343434;
+    text-transformation: none;
+}
+
+.checkcheckcheck-yourbooty:hover {
+    color: #343434;
+    text-transformation: none;
+}
+
+.btn-style-grpzm {
+    background: #e6fb71 url("../../../../../resources/images/skulls.png") repeat scroll 0 0;
 }
