@@ -88,3 +88,7 @@ body {
 a:hover, a:focus {
     color: #e6fb71;
 }
+
+#main-bar {
+    margin-top: 15px;
+}
