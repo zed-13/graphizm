@@ -65,7 +65,6 @@ class GraphizmContact extends TemplateDefiner
      *   );
      */
     public function send($email, $message) {
-        // @TODO: send e-mail.
         $r = array(
             "state" => TRUE,
             "messages" => array(),
@@ -79,7 +78,19 @@ class GraphizmContact extends TemplateDefiner
             $r["state"] = FALSE;
         }
         if ($r["state"]) {
-            $r["messages"][] = t("Votre message a été envoyé, j'y répondrai dans les plus brefs délais.");
+            try {
+                $message = htmlspecialchars($message);
+                $from = 'From: ' . htmlspecialchars($email) . "\r\n";
+                if (mail(GraphizmCore::instance()->gvar("contact-form")["to"], t("Contact Graphizm"), $message, $from)) {
+                    $r["state"] = FALSE;
+                    $r["messages"][] = t("Impossible d'envoyer le-mail. Réessayez plus tard.");
+                } else {
+                    $r["messages"][] = t("Votre message a été envoyé, j'y répondrai dans les plus brefs délais.");
+                }
+            } catch (\Exception $e) {
+                $r["state"] = FALSE;
+                $r["messages"][] = t("Une erreur inconnue est survenue lors de l'envoi de l'e-mail.");
+            }
         }
 
         return json_encode($r);
