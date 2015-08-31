@@ -81,7 +81,7 @@ class GraphizmContact extends TemplateDefiner
             try {
                 $message = htmlspecialchars($message);
                 $from = 'From: ' . htmlspecialchars($email) . "\r\n";
-                if (mail(GraphizmCore::instance()->gvar("contact-form")["to"], t("Contact Graphizm"), $message, $from)) {
+                if (!mail(GraphizmCore::instance()->gvar("contact-form")["to"], t("Contact Graphizm"), $message, $from)) {
                     $r["state"] = FALSE;
                     $r["messages"][] = t("Impossible d'envoyer le-mail. Réessayez plus tard.");
                 } else {

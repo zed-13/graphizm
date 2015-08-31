@@ -31,7 +31,7 @@ $conf = array(
         array(
             "text" => "Me contacter",
             "icon" => "glyphicon glyphicon-envelope",
-            "link" => "javascript:void();",
+            "link" => "#",
             "attributes" => array(
                 "id" => "contact-button-modal",
             ),
