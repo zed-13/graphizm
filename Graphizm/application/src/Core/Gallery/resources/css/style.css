@@ -1,10 +1,11 @@
 .gcaption {
-    color:#DEDEDE;
+    color:#EFEFEF;
     padding:5px;
     padding-left:15px;
     margin-top: 10px;
+    border:0;
+    background : #343434;
 }
-
 .gallery {
     float:left;
     line-height:0px;
@@ -12,36 +13,30 @@
     margin:auto;
     width:100%;
 }
-
 .gallery a {
     opacity:0.2;
     filter:alpha(opacity=20);
     display: inline-block;
 }
-
 .gallery a:hover, .gallery a:focus {
     opacity:1;
     filter:alpha(opacity=100);
 }
-
 .lecentreur {
     text-align:center;
     width:100%;
     display:inline-block;
 }
-
 .lecentreur a {
     text-decoration:none;
 }
-
 .no-gallery {
     padding: 15px;
-    border: 2px solid dotted black;
-    background: #EFEFEF;
+    border: 2px dotted #343434;
+    background : #e6fb71 url("../../../../../resources/images/skulls.png") repeat scroll 0 0;
     color: #343434;
     line-height: 1em;
 }
-
 .no-gallery-emphase {
     padding: 15px;
     border: 2px solid dotted black;
@@ -49,34 +44,40 @@
     font-size: 18px;
     color: #343434;
 }
-
 .gallery-title {
     font-size: 18px;
 }
-
 .up {
-    color: #787878;
+    color: #ABABAB;
     text-decoration: none;
     padding-right: 15px;
 }
-.up:hover {
+.up:hover, .up:focus {
     text-decoration: none;
+    color: #ABABAB;
 }
-
 .checkcheckcheck-yourbooty {
     color: #343434;
     text-transformation: none;
 }
-
 .checkcheckcheck-yourbooty:hover {
     color: #343434;
     text-transformation: none;
 }
-
 .btn-style-grpzm {
-    background: #e6fb71 url("../../../../../resources/images/skulls.png") repeat scroll 0 0;
+    border:0;
 }
-
+.btn-style-grpzm:hover {
+    background : #e6fb71 url("../../../../../resources/images/skulls.png") repeat scroll 0 0;
+}
+.btn-style-grpzm a {
+    color: #439bbd;
+    width: 100%;
+    height: 100%;
+}
+.btn-style-grpzm a:hover {
+    color: #439bbd;
+}
 .js-no-gallery {
     margin-top: 15px;
 }

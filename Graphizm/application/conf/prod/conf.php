@@ -21,17 +21,17 @@ $conf = array(
         array(
             "text" => "Mes dessins",
             "icon" => "glyphicon glyphicon-picture",
-            "link" => "#"
+            "link" => "javascript:void(0);"
         ),
         array(
             "text" => "Galeries",
             "icon" => "glyphicon glyphicon-th",
-            "link" => "#"
+            "link" => "javascript:void(0);"
         ),
         array(
             "text" => "Me contacter",
             "icon" => "glyphicon glyphicon-envelope",
-            "link" => "#",
+            "link" => "javascript:void(0);",
             "attributes" => array(
                 "id" => "contact-button-modal",
             ),
@@ -41,23 +41,23 @@ $conf = array(
         "zone_1" => array(
             "title" => "A propos",
             "picture" => "resources/images/footer-logo.png",
-            "content" => "Copyright 2011-2015 GraphiZm"
+            "content" => "Copyright 2011-2015 GraphiZm<br>Retrouvez moi sur <a href='https://github.com/zed-13' class='link-black'>Github</a>",
         ),
         "zone_2" => array(
             "title" => "Technologies utilisés",
             "picture" => "resources/images/footer-logo2.png",
-            "content" => "Bootstrap 3, jQuery, HTML5 shim, Respond.js"
+            "content" => "Bootstrap 3, jQuery, HTML5 shim, Respond.js, Spin.js, Google Fonts",
         ),
         "zone_3" => array(
             "title" => "Dernier post",
             "picture" => "",
-            "content" => "Lorem ipsum blablablabla"
-        )
+            "content" => "Lorem ipsum blablablabla",
+        ),
     ),
     "gallery" => array(
         "conf" => array(
             "base_template_list" => "round",
-            "base_template_detail" => "natural"
+            "base_template_detail" => "natural",
         ),
         "content" => array(
             "main" => array(
@@ -65,7 +65,7 @@ $conf = array(
                     "title" => "Mes dessins",
                     "base_directory" => "resources/images/galleries/main",
                     "base_template_list" => "round",
-                    "base_template_detail" => "natural"
+                    "base_template_detail" => "natural",
                 )
             ),
             "secondary" => array(
@@ -73,9 +73,9 @@ $conf = array(
                     "title" => "Mes dessins",
                     "base_directory" => "resources/images/galleries/main",
                     "base_template_list" => "round",
-                    "base_template_detail" => "natural"
-                )
-            )
-        )
-    )
+                    "base_template_detail" => "natural",
+                ),
+            ),
+        ),
+    ),
 );

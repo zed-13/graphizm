@@ -41,23 +41,23 @@ $conf = array(
         "zone_1" => array(
             "title" => "A propos",
             "picture" => "resources/images/footer-logo.png",
-            "content" => "Copyright 2011-2015 GraphiZm"
+            "content" => "Copyright 2011-2015 GraphiZm",
         ),
         "zone_2" => array(
             "title" => "Technologies utilisés",
             "picture" => "resources/images/footer-logo2.png",
-            "content" => "Bootstrap 3, jQuery, HTML5 shim, Respond.js"
+            "content" => "Bootstrap 3, jQuery, HTML5 shim, Respond.js",
         ),
         "zone_3" => array(
             "title" => "Dernier post",
             "picture" => "",
-            "content" => "Lorem ipsum blablablabla"
-        )
+            "content" => "Lorem ipsum blablablabla",
+        ),
     ),
     "gallery" => array(
         "conf" => array(
             "base_template_list" => "round",
-            "base_template_detail" => "natural"
+            "base_template_detail" => "natural",
         ),
         "content" => array(
             "main" => array(
@@ -65,7 +65,7 @@ $conf = array(
                     "title" => "Mes dessins",
                     "base_directory" => "resources/images/galleries/main",
                     "base_template_list" => "round",
-                    "base_template_detail" => "natural"
+                    "base_template_detail" => "natural",
                 )
             ),
             "secondary" => array(
@@ -73,9 +73,9 @@ $conf = array(
                     "title" => "Mes dessins",
                     "base_directory" => "resources/images/galleries/main",
                     "base_template_list" => "round",
-                    "base_template_detail" => "natural"
-                )
-            )
-        )
-    )
+                    "base_template_detail" => "natural",
+                ),
+            ),
+        ),
+    ),
 );

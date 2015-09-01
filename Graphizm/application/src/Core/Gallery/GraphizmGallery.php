@@ -90,7 +90,7 @@ class GraphizmGallery extends TemplateDefiner
         $all = $this->getAllGalleriesNames();
         $taille = sizeof($all);
         if ($taille > 0) {
-            $resultat = '';
+            $resultat = '<div class="menu-gallery"><hr>';
             // Menu generation.
             for ($i = 0; $i < $taille; $i ++) {
                 $base = htmlentities(str_replace(' ', '_', $all[$i]));
@@ -105,6 +105,7 @@ class GraphizmGallery extends TemplateDefiner
                 );
                 $resultat .= GraphizmTemplater::instance()->theme("gallery-menu", $r);
             }
+            $resultat .= "<hr></div>";
 
             // Galleries generation.
             for ($i = 0; $i < $taille; $i ++) {

@@ -21,7 +21,7 @@
           </div>
           <div class="form-group">
             <label for="message-text" class="control-label"><?php echo t("Message"); ?> : </label>
-            <textarea class="form-control" id="message-text"></textarea>
+            <textarea class="form-control" id="message-text" style="height: 150px"></textarea>
           </div>
           <div class="form-group antibot">
             <label for="antibot">
