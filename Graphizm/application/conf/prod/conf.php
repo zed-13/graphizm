@@ -21,12 +21,19 @@ $conf = array(
         array(
             "text" => "Mes dessins",
             "icon" => "glyphicon glyphicon-picture",
-            "link" => "javascript:void(0);"
+            "link" => "javascript:void(0);",
+            "attributes" => array(
+                "id" => "main",
+                "data-value" => "Mes_dessins",
+            ),
         ),
         array(
             "text" => "Galeries",
             "icon" => "glyphicon glyphicon-th",
-            "link" => "javascript:void(0);"
+            "link" => "javascript:void(0);",
+            "attributes" => array(
+                "id" => "galleries-link",
+            ),
         ),
         array(
             "text" => "Me contacter",
@@ -59,6 +66,7 @@ $conf = array(
             "base_template_list" => "round",
             "base_template_detail" => "natural",
         ),
+        // Not used yet @TODO.
         "content" => array(
             "main" => array(
                 array(

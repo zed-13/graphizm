@@ -39,8 +39,8 @@
 }
 .no-gallery-emphase {
     padding: 15px;
-    border: 2px solid dotted black;
-    background: #EFEFEF;
+    border: 2px dotted #343434;
+    background : #e6fb71 url("../../../../../resources/images/skulls.png") repeat scroll 0 0;
     font-size: 18px;
     color: #343434;
 }

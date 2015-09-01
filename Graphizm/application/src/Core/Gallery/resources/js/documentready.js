@@ -58,5 +58,38 @@
                 toto($(this).val());
             });
         });
+        // @TODO : clean up code.
+        $("#main").click(function() {
+            var ident = $(this).data("value");
+            $(".input-menu_checkbox").each(function(){
+              if($(this).val() === ident){
+                $(this).prop("checked", true);
+                $("#" + $(this).val()).show();
+                $("#" + $(this).val() + "_").show();
+              } else {
+                $(this).prop("checked", false);
+                $("#" + $(this).val()).hide();
+                $("#" + $(this).val() + "_").hide();
+              }
+            });
+            $(".menu-gallery").hide();
+            $("#" + ident + "_").hide();
+            checkNonEmpty();
+            $(this).attr("style", "color:#EFEFEF");
+            $("#galleries-link").removeAttr("style");
+        });
+        $("#main").click();
+
+        $("#galleries-link").click(function() {
+            $(".input-menu_checkbox").each(function(){
+                  $(this).prop("checked", true);
+                  $("#" + $(this).val()).show();
+                  $("#" + $(this).val() + "_").show();
+            });
+            checkNonEmpty();
+            $(".menu-gallery").show();
+            $("#main").removeAttr("style");
+            $(this).attr("style", "color:#EFEFEF");
+        });
     });
 })(jQuery);
