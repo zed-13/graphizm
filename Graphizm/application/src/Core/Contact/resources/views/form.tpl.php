@@ -23,6 +23,12 @@
             <label for="message-text" class="control-label"><?php echo t("Message"); ?> : </label>
             <textarea class="form-control" id="message-text"></textarea>
           </div>
+          <div class="form-group antibot">
+            <label for="antibot">
+                Vous ne devez pas remplir ce champ
+            </label>
+            <input type="text" name="email" id="antibot" />
+          </div>
         </form>
       </div>
       <div class="modal-footer">

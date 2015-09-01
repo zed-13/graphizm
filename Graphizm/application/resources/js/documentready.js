@@ -17,13 +17,14 @@
         $("#send-email-btn").click(function() {
             var mail = $("#email-field").val(),
                 msg = $("#message-text").val(),
+                trust = $("#antibot").val(),
                 target = document.getElementById('send-email-btn'),
                 spinner = new Spinner().spin(target);
             $.ajax({
                 type: "POST",
                 url: "blank.index.php",
                 dataType: "json",
-                data: { email: mail, message: msg, state: "contact" }
+                data: { email: mail, message: msg, state: "contact", key: trust }
             })
             .done(function(r) {
                 if (r.state === true) {

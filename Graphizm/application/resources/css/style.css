@@ -93,3 +93,7 @@ a:hover, a:focus {
     margin-top: 15px;
     margin-bottom:10px;
 }
+
+.antibot {
+    display: none;
+}

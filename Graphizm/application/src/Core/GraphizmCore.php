@@ -73,6 +73,7 @@ final class GraphizmCore
     public static function instance($environment = "prod")
     {
         if (empty(GraphizmCore::$instance)) {
+            session_start();
             GraphizmCore::$instance = new GraphizmCore($environment);
         }
 
@@ -177,13 +178,17 @@ final class GraphizmCore
         $a = GraphizmContact::instance();
         $email = "";
         $message = "";
+        $antibot = "";
         if (isset($_POST["email"])) {
-            $email = htmlEntities($_POST["email"], ENT_QUOTES);
+            $email = htmlentities($_POST["email"], ENT_QUOTES);
         }
         if (isset($_POST["message"])) {
-            $message = htmlEntities($_POST["message"], ENT_QUOTES);
+            $message = htmlentities($_POST["message"], ENT_QUOTES);
         }
-        return $a->send($email, $message);
+        if (isset($_POST["key"])) {
+            $antibot = htmlentities($_POST["key"], ENT_QUOTES);
+        }
+        return $a->send($email, $message, $antibot);
     }
 
     /**

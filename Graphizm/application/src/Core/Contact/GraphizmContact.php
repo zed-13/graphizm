@@ -3,7 +3,7 @@
 /**
  * Main class to handle contact form.
  * 
- * @TODO : implement the class + Use Google reCaptcha
+ * @TODO : implement the class + Use Google reCaptcha.
  *
  * @author Aurélien
  *
@@ -57,6 +57,8 @@ class GraphizmContact extends TemplateDefiner
      *   Email (target).
      * @param string $message
      *   Message.
+     * @param string $trust
+     *   Anti-bot check. If not empty: bot detected.
      *
      * @return string
      *   Json encoded array(
@@ -64,35 +66,65 @@ class GraphizmContact extends TemplateDefiner
      *      "messages" => array(),
      *   );
      */
-    public function send($email, $message) {
+    public function send($email, $message, $trust = NULL) {
         $r = array(
             "state" => TRUE,
             "messages" => array(),
         );
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $r["messages"][] = t("Veuillez renseigner votre e-mail.");
-            $r["state"] = FALSE;
-        }
-        if (empty($message)) {
-            $r["messages"][] = t("Renseignez votre message.");
-            $r["state"] = FALSE;
-        }
-        if ($r["state"]) {
-            try {
-                $message = htmlspecialchars($message);
-                $from = 'From: ' . htmlspecialchars($email) . "\r\n";
-                if (!mail(GraphizmCore::instance()->gvar("contact-form")["to"], t("Contact Graphizm"), $message, $from)) {
-                    $r["state"] = FALSE;
-                    $r["messages"][] = t("Impossible d'envoyer l'e-mail. Réessayez plus tard.");
-                } else {
-                    $r["messages"][] = t("Votre message a été envoyé, j'y répondrai dans les plus brefs délais.");
-                }
-            } catch (\Exception $e) {
+        if ($this->canSendEmail()) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $r["messages"][] = t("Veuillez renseigner votre e-mail.");
                 $r["state"] = FALSE;
-                $r["messages"][] = t("Une erreur inconnue est survenue lors de l'envoi de l'e-mail.");
+            }
+            if (empty($message)) {
+                $r["messages"][] = t("Renseignez votre message.");
+                $r["state"] = FALSE;
+            }
+            if (!empty($trust)) {
+                $r["messages"][] = t("Il semble que vous êtes un bot.");
+                $r["state"] = FALSE;
+            }
+            if ($r["state"]) {
+                try {
+                    $message = htmlspecialchars($message);
+                    $from = 'From: ' . htmlspecialchars($email) . "\r\n";
+                    if (!mail(GraphizmCore::instance()->gvar("contact-form")["to"], t("Contact Graphizm"), $message, $from)) {
+                        $r["state"] = FALSE;
+                        $r["messages"][] = t("Impossible d'envoyer l'e-mail. Réessayez plus tard.");
+                    } else {
+                        $_SESSION["email"] = time();
+                        $r["messages"][] = t("Votre message a été envoyé, j'y répondrai dans les plus brefs délais.");
+                    }
+                } catch (\Exception $e) {
+                    $r["state"] = FALSE;
+                    $r["messages"][] = t("Une erreur inconnue est survenue lors de l'envoi de l'e-mail.");
+                }
+            }
+        } else {
+            $r["state"] = FALSE;
+            $r["messages"][] = t("Vous ne pouvez envoyer d'email que toutes les 10 minutes. Réessayez plus tard.");
+        }
+        return json_encode($r);
+    }
+
+    /**
+     * Says if can send email.
+     *
+     * Upgrade state of sending or not emails.
+     *
+     * @return bool
+     *   TRUE if can send e-mail, FALSE otherwise.
+     */
+    protected function canSendEmail() {
+        $r = TRUE;
+        if (isset($_SESSION["email"])) {
+            $send_time_out = $_SESSION["email"] + 600;
+            if (time() >= $send_time_out) {
+                unset($_SESSION["email"]);
+            } else {
+                $r = FALSE;
             }
         }
-
-        return json_encode($r);
+        return $r;
     }
 }
