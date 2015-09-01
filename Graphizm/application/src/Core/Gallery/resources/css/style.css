@@ -76,3 +76,7 @@
 .btn-style-grpzm {
     background: #e6fb71 url("../../../../../resources/images/skulls.png") repeat scroll 0 0;
 }
+
+.js-no-gallery {
+    margin-top: 15px;
+}
