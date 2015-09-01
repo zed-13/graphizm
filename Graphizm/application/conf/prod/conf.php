@@ -41,12 +41,12 @@ $conf = array(
         "zone_1" => array(
             "title" => "A propos",
             "picture" => "resources/images/footer-logo.png",
-            "content" => "Copyright 2011-2015 GraphiZm<br>Retrouvez moi sur <a href='https://github.com/zed-13' class='link-black'>Github</a>",
+            "content" => "Copyright 2011-2015 GraphiZm<br>Retrouvez moi sur <a href='https://github.com/zed-13' target='_blank' class='link-black'>Github</a>",
         ),
         "zone_2" => array(
             "title" => "Technologies utilisés",
             "picture" => "resources/images/footer-logo2.png",
-            "content" => "Bootstrap 3, jQuery, HTML5 shim, Respond.js, Spin.js, Google Fonts",
+            "content" => "Bootstrap 3, jQuery, HTML5 shim, Respond.js, Spin.js, Shadowbox",
         ),
         "zone_3" => array(
             "title" => "Dernier post",

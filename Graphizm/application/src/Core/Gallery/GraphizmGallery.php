@@ -285,10 +285,10 @@ class GraphizmGallery extends TemplateDefiner
     }
 
     /**
-     * Permet de lister les fichiers png et jpg du répertoire passé en paramètre
+     * Lists jpeg & png files of current directory.
      *
-     * @return array le nom des fichiers images
-     *        
+     * @return array
+     *   Picture names.
      */
     protected function getAllFiles()
     {
@@ -317,7 +317,7 @@ class GraphizmGallery extends TemplateDefiner
      *   File name of the image.
      *   
      * @return mixed
-     *   none or FALSE if thumbnail creation has failed.
+     *   None or FALSE if thumbnail creation has failed.
      */
     protected function createSingleThumbnail($filename)
     {
@@ -443,6 +443,16 @@ class GraphizmGallery extends TemplateDefiner
                 "type" => "css",
                 "path" => "src/Core/Gallery/resources/css/style.css",
                 "weight" => "500",
+            ),
+            array(
+                "type" => "js",
+                "path" => "src/Core/Gallery/vendors/shadowbox/shadowbox.js",
+                "weight" => "501",
+            ),
+            array(
+                "type" => "css",
+                "path" => "src/Core/Gallery/vendors/shadowbox/shadowbox.css",
+                "weight" => "501",
             ),
         );
     }
