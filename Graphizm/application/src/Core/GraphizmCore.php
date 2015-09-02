@@ -175,7 +175,7 @@ final class GraphizmCore
      *   state of the email sending
      */
     private function actionContact() {
-        $a = GraphizmContact::instance();
+        $a = GraphizmContact::instance()->getProcessor();
         $email = "";
         $message = "";
         $antibot = "";
@@ -188,6 +188,7 @@ final class GraphizmCore
         if (isset($_POST["key"])) {
             $antibot = htmlentities($_POST["key"], ENT_QUOTES);
         }
+
         return $a->send($email, $message, $antibot);
     }
 
@@ -198,8 +199,10 @@ final class GraphizmCore
      *   Galleries code.
      */
     private function actionGalleries() {
-        $a = new GraphizmGallery();
-        return $a->displayAllGalleries(TRUE);
+        $factory = GraphizmGallery::instance();
+        $instance = $factory->create();
+
+        return $instance->displayAllGalleries(TRUE);
     }
 
     /**
@@ -208,7 +211,7 @@ final class GraphizmCore
     private function coreInitialization()
     {
         require_once 'Translator/Translator.php';
-        require_once 'Templater/GraphizmTemplater.php';
+        require_once 'Controller/GraphizmController.php';
         require_once 'Gallery/GraphizmGallery.php';
         require_once 'Contact/GraphizmContact.php';
     }

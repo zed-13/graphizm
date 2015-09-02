@@ -147,7 +147,7 @@
     ?>
     <?php
         // Modal contact form.
-        echo GraphizmTemplater::instance()->theme("contact-form", array("intro" => $core->gvar("contact-form")["intro"]));
+        echo GraphizmController::instance()->theme("contact-form", array("intro" => $core->gvar("contact-form")["intro"]));
     ?>
   </body>
 </html>

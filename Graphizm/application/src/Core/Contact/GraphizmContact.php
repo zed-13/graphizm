@@ -2,18 +2,18 @@
 
 /**
  * Main class to handle contact form.
- * 
- * @TODO : implement the class + Use Google reCaptcha.
  *
  * @author Aurélien
  *
  */
-class GraphizmContact extends TemplateDefiner
+class GraphizmContact extends ControllerDefiner
 {
-    /**
-     * @var GraphizmContact instance.
-     */
     protected static $instance;
+    protected $model;
+    protected $processorType = "GraphizmContactModel";
+    protected $factoryList = array(
+        "GraphizmContactModel",
+    );
 
     /**
      * Default constructor.
@@ -49,6 +49,44 @@ class GraphizmContact extends TemplateDefiner
             "contact-form" => "src" . DS . "Core" . DS ."Contact" . DS . "resources" . DS ."views" . DS . "form.tpl.php",
         );
     }
+}
+
+/**
+ * Interface Graphizm Contact Form.
+ *
+ * @author Aurélien
+ *
+ * @todo : externalize.
+ */
+interface GraphizmContactInterface {
+
+    /**
+     * Sends a mail to target, with message.
+     *
+     * @param string $email
+     *   Email (target).
+     * @param string $message
+     *   Message.
+     * @param string $trust
+     *   Anti-bot check. If not empty: bot detected.
+     *
+     * @return string
+     *   Json encoded array(
+     *      "state" => TRUE|FALSE,
+     *      "messages" => array(),
+     *   );
+     */
+    public function send($email, $message, $trust = NULL);
+}
+
+/**
+ * Class Graphizm Contact Form processor.
+ *
+ * @author Aurélien
+ *
+ * @todo : externalize.
+ */
+class GraphizmContactModel implements GraphizmContactInterface {
 
     /**
      * Sends a mail to target, with message.
@@ -68,8 +106,8 @@ class GraphizmContact extends TemplateDefiner
      */
     public function send($email, $message, $trust = NULL) {
         $r = array(
-            "state" => TRUE,
-            "messages" => array(),
+                "state" => TRUE,
+                "messages" => array(),
         );
         if ($this->canSendEmail()) {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

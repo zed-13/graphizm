@@ -1,88 +1,103 @@
 <?php
 
-/**
- * From a path, list all the picture in the directory.
- * 
- * Create a thumbnail for each picture, if necessary.
- * Important notice : this class can only be used with low number of pictures to display.
- * For huge volume of data, use another libray or use lazy loading.
- *
- * @TODO : create a command line to launch image generation via CLI.
- * @TODO : externalize in another class all the file based methods.
- *
- * @author Aurélien
- *
- */
-class GraphizmGallery extends TemplateDefiner
+interface GraphizmGalleryInterface
 {
     /**
-     * @var bool says if we have to load js and css files.
+     * Displays all the galleries, in the given directory.
+     *
+     * @return string code displaying the gallery.
      */
-    static protected $js_and_css_loaded = FALSE;
+    function displayAllGalleries($withGen = FALSE);
 
     /**
-     * @var string default path of the gallery.
+     * Displays a specific gallery defined by its directory name.
+     *
+     * @param string $directory
+     *   Directory name.
+     * @param bool $with_gen
+     *   TRUE if thumbnail generation.
+     *
+     * @return mixed
+     *   HTML code.
+     */
+    function displayGallery($directory, $with_gen = FALSE);
+
+    /**
+     * Get thumbnail uri.
+     *
+     * @param string $name
+     * Name of the thumbnail.
+     *
+     * @return string URI of the thumbnail to display.
+     */
+    function getThumbnail($name);
+
+    /**
+     * Gets gallery names within an array.
+     *
+     * @return array
+     *   Indexed array with galleries names.
+     */
+    function getAllGalleriesNames();
+}
+
+/**
+ * Graphizm Gallery Model. Processor class.
+ *
+ * @author Aurélien
+ */
+class GraphizmGalleryModel implements GraphizmGalleryInterface
+{
+    /**
+     * String default path of the gallery.
      */
     protected $basePath;
 
     /**
-     * @var string default path towards the gallery.
+     * String default path towards the gallery.
      */
     protected $path;
 
     /**
-     * @var string Default template name of the thumbnail.
+     * String Default template name of the thumbnail.
      */
     protected $template_name;
 
     /**
-     * @var int width of thumbnails.
+     * Int width of thumbnails.
      */
     protected $l;
 
     /**
-     * @var int height of thumbnails.
+     * Int height of thumbnails.
      */
     protected $h;
 
     /**
-     * @var string current directory processed.
+     * String current directory processed.
      */
     protected $name;
 
     /**
-     * Default constructor.
+     * Default constructor. Do not instanciate directly, use factory !
+     *
+     * Use GraphizmGallery::instance()->create().
      *
      * @param array $conf
+     *   Default config.
      */
     public function __construct($conf = array())
     {
         $this->basePath = GraphizmCore::instance()->gvar("galleries_basedir");
         $this->template_name = GraphizmCore::instance()->gvar("template_name_default");
-        $this->defineTemplates();
-        $this->addToRegister();
         $this->setTemplate();
-        $this->loadJSCSS();
-    }
-
-    /**
-     * Defined templates.
-     */
-    public function defineTemplates()
-    {
-        $this->templates = array(
-            "gallery-single" => "src" . DS . "Core" . DS ."Gallery" . DS . "resources" . DS ."views" . DS . "Gallery-single.tpl.php",
-            "gallery-menu" =>  "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-menu.tpl.php",
-            "gallery-thumbnail" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-thumbnail.tpl.php",
-            "no-gallery" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "No-Gallery.tpl.php",
-        );
     }
 
     /**
      * Displays all the galleries, in the given directory.
-     * 
+     *
      * @return string
-     *   code displaying the gallery.
+     *   Code displaying the gallery.
      */
     public function displayAllGalleries($withGen = FALSE)
     {
@@ -98,48 +113,46 @@ class GraphizmGallery extends TemplateDefiner
                     "name_js" => $base,
                     "name_id" => $base . '_check',
                     "name_value" => $base,
-                    "name_href" => $base .'_',
+                    "name_href" => $base . '_',
                     "title" => t("Voir cette galerie"),
                     "name_class" => $base,
-                    "name_displayed" => htmlentities($all[$i]),
+                    "name_displayed" => htmlentities($all[$i])
                 );
-                $resultat .= GraphizmTemplater::instance()->theme("gallery-menu", $r);
+                $resultat .= GraphizmController::instance()->theme("gallery-menu", $r);
             }
             $resultat .= "<hr></div>";
-
+            
             // Galleries generation.
             for ($i = 0; $i < $taille; $i ++) {
                 $r = array(
-                    "gallery_name" => t("Galerie") ." - " . htmlentities($all[$i]),
+                    "gallery_name" => t("Galerie") . " - " . htmlentities($all[$i]),
                     "name_id" => htmlentities(str_replace(' ', '_', $all[$i])) . "_",
                     "title" => t("Haut de page"),
                     "div_id" => htmlentities(str_replace(' ', '_', $all[$i])),
-                    "a_gallery_code" => $this->displayGallery($all[$i], $withGen),
+                    "a_gallery_code" => $this->displayGallery($all[$i], $withGen)
                 );
-                $resultat .= GraphizmTemplater::instance()->theme("gallery-single", $r);
+                $resultat .= GraphizmController::instance()->theme("gallery-single", $r);
             }
-        }
-        else {
+        } else {
             $r = array(
-                "no_gallery" => t("Aucune galerie n'est présente !"),
+                "no_gallery" => t("Aucune galerie n'est présente !")
             );
-            $resultat = GraphizmTemplater::instance()->theme("no-gallery", $r);
+            $resultat = GraphizmController::instance()->theme("no-gallery", $r);
         }
-
+        
         return $resultat;
     }
 
     /**
-     * Affiche la galerie dont le nom du répertoire a été passé au constructeur
+     * Displays a specific gallery defined by its directory name.
      *
      * @param string $directory
-     *            le nom du répertoire contenant les images
+     *   Directory name.
      * @param bool $with_gen
-     *            si on doit générer les miniatures
-     * @param int $retour
-     *            0 pour un affichage direct, 1 pour un retour string
-     * @return mixed
+     *   TRUE if thumbnail generation.
      *
+     * @return mixed
+     *   HTML code.
      */
     public function displayGallery($directory, $with_gen = FALSE)
     {
@@ -148,7 +161,7 @@ class GraphizmGallery extends TemplateDefiner
         $code = '';
         $data = $this->getAllFiles();
         $int_tdata = sizeof($data);
-        if (!empty($int_tdata)) {
+        if (! empty($int_tdata)) {
             for ($i = 0; $i < $int_tdata; $i ++) {
                 $a = substr($data[$i], 0, - 4);
                 $r = array(
@@ -156,15 +169,17 @@ class GraphizmGallery extends TemplateDefiner
                     "title" => $a,
                     "shadowbox_name" => $this->name,
                     "img_thumbnail" => $this->getThumbnail($data[$i]),
-                    "alt_thumbnail" => $a,
+                    "alt_thumbnail" => $a
                 );
-                $code .= GraphizmTemplater::instance()->theme("gallery-thumbnail", $r);
+                $code .= GraphizmController::instance()->theme("gallery-thumbnail", $r);
             }
+        } else {
+            $code = GraphizmController::instance()->theme("no-gallery", array(
+                "no_gallery" => t("Aucune image pour le moment dans cette catégorie !"),
+                "emphase" => FALSE
+            ));
         }
-        else {
-            $code = GraphizmTemplater::instance()->theme("no-gallery", array("no_gallery" => t("Aucune image pour le moment dans cette catégorie !"), "emphase" => FALSE));
-        }
-
+        
         return $code;
     }
 
@@ -172,10 +187,9 @@ class GraphizmGallery extends TemplateDefiner
      * Get thumbnail uri.
      *
      * @param string $name
-     *   name of the thumbnail
-     *   
-     * @return string
-     *   URI of the thumbnail to display.
+     * Name of the thumbnail.
+     *
+     * @return string URI of the thumbnail to display.
      */
     public function getThumbnail($name)
     {
@@ -184,13 +198,15 @@ class GraphizmGallery extends TemplateDefiner
         if (file_exists($path)) {
             $r = GraphizmCore::instance()->gvar("galleries_src") . $this->name . "/thumbnail/" . $this->template_name . "/" . $name;
         }
+
         return $r;
     }
 
     /**
-     * Récupère tous les noms de galeries dans un tableau de string
-     * 
-     * @return Array
+     * Gets gallery names within an array.
+     *
+     * @return array
+     *   Indexed array with galleries names.
      */
     public function getAllGalleriesNames()
     {
@@ -210,7 +226,7 @@ class GraphizmGallery extends TemplateDefiner
      * Initializes all the attributes.
      *
      * @param string $directory
-     *   name of the directory to look for pictures.
+     *   Name of the directory to look for pictures.
      * @param bool $withGen
      *   TRUE if thumbnails are to be generated.
      */
@@ -235,18 +251,16 @@ class GraphizmGallery extends TemplateDefiner
 
     /**
      * Create all thumbnails in all the directories if necessary.
-     *
-     * @return none
      */
     protected function createAllThumbnails()
     {
         $thumb = $this->path . 'thumbnail' . DS;
-        if (!file_exists($thumb) || !is_dir($thumb)) {
+        if (! file_exists($thumb) || ! is_dir($thumb)) {
             $this->createDirectory('thumbnail');
         }
         if (is_readable($thumb) && is_writable($thumb)) {
             $thumb .= $this->template_name . DS;
-            if (!file_exists($thumb) || !is_dir($thumb)) {
+            if (! file_exists($thumb) || ! is_dir($thumb)) {
                 $this->createDirectory($this->template_name, 'thumbnail');
             }
 
@@ -280,15 +294,14 @@ class GraphizmGallery extends TemplateDefiner
             $p .= $strPath . DS;
         }
         $p .= $strName;
-
+        
         return mkdir($p, 0755);
     }
 
     /**
      * Lists jpeg & png files of current directory.
      *
-     * @return array
-     *   Picture names.
+     * @return array Picture names.
      */
     protected function getAllFiles()
     {
@@ -315,7 +328,7 @@ class GraphizmGallery extends TemplateDefiner
      *
      * @param string $filename
      *   File name of the image.
-     *   
+     *
      * @return mixed
      *   None or FALSE if thumbnail creation has failed.
      */
@@ -351,16 +364,13 @@ class GraphizmGallery extends TemplateDefiner
 
             if ($extension == 'jpg' || $extension == 'jpeg') {
                 $img_in = imagecreatefromjpeg($chemin_image);
-            }
-            else {
+            } else {
                 if ($extension == 'png') {
                     $img_in = imagecreatefrompng($chemin_image);
-                }
-                else { 
+                } else {
                     if ($extension == 'gif') {
                         $img_in = imagecreatefromgif($chemin_image);
-                    }
-                    else {
+                    } else {
                         return false;
                     }
                 }
@@ -375,11 +385,11 @@ class GraphizmGallery extends TemplateDefiner
     }
 
     /**
-     * Returns true if thumbnail doesn't exists or if dimension don't fit.
+     * Returns TRUE if thumbnail doesn't exists or if dimensions don't fit.
      *
      * @param string $filepath
-     *   file path.
-     *
+     *   File path.
+     *            
      * @return bool
      *   True if has to be created.
      */
@@ -394,11 +404,10 @@ class GraphizmGallery extends TemplateDefiner
     }
 
     /**
-     * Permet d'assigner un template à la galerie
+     * Assign a template to the gallery.
      *
      * @param int $number
-     *            le numéro (entier) du template
-     * @return none
+     *   Number of the template.
      */
     protected function setTemplate($number = NULL)
     {
@@ -411,19 +420,113 @@ class GraphizmGallery extends TemplateDefiner
             require_once ($path);
             $this->l = $width;
             $this->h = $height;
-            GraphizmCore::instance()->addFiles(array("type" => "raw_css", "path" => $css, "weight" => 100));
+            GraphizmCore::instance()->addFiles(array(
+                "type" => "raw_css",
+                "path" => $css,
+                "weight" => 100
+            ));
         } else {
-            GraphizmCore::instance()->addFiles(array("type" => "raw_css", "path" => '.dark{margin:5px;}', "weight" => 100));
+            GraphizmCore::instance()->addFiles(array(
+                "type" => "raw_css",
+                "path" => '.dark{margin:5px;}',
+                "weight" => 100
+            ));
             $this->l = 100;
             $this->h = 100;
         }
+    }
+}
+
+/**
+ * From a path, list all the picture in the directory.
+ *
+ * Create a thumbnail for each picture, if necessary.
+ * Important notice : this class can only be used with low number of pictures to display.
+ * For huge volume of data, use another libray or use lazy loading.
+ *
+ * @TODO : create a command line to launch image generation via CLI.
+ * @TODO : externalize in another class all the file based methods.
+ *
+ * @author Aurélien
+ *
+ */
+class GraphizmGallery extends ControllerDefiner
+{
+
+    /**
+     * Bool, says if we have to load js and css files.
+     */
+    protected static $js_and_css_loaded = FALSE;
+    protected static $instance = NULL;
+    protected $processorType = "GraphizmGalleryModel";
+    protected $factoryList = array(
+        "GraphizmGalleryModel",
+    );
+
+    /**
+     * Default constructor.
+     *
+     * @param array $conf
+     *   Default config.
+     */
+    static public function instance($conf = array()) {
+        if (empty(self::$instance)) {
+            self::$instance = new GraphizmGallery();
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Creates a graphizm gallery model instance.
+     *
+     * @param string $type
+     *   Class instanciated.s
+     * @param array $conf
+     *   Config.
+     *
+     * @return GraphizmGalleryInterface
+     *   Instance.
+     */
+    public function create($type = NULL, $conf = array()) {
+        if (empty($type) || !in_array($type, $this->factoryList)) {
+            $type = $this->processorType;
+        }
+
+        return new $type($conf);
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param array $conf
+     *   Config.
+     */
+    protected function __construct($conf = array())
+    {
+        $this->defineTemplates();
+        $this->addToRegister();
+        $this->loadJSCSS();
+    }
+
+    /**
+     * Defined templates.
+     */
+    public function defineTemplates()
+    {
+        $this->templates = array(
+            "gallery-single" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-single.tpl.php",
+            "gallery-menu" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-menu.tpl.php",
+            "gallery-thumbnail" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-thumbnail.tpl.php",
+            "no-gallery" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "No-Gallery.tpl.php"
+        );
     }
 
     /**
      * Load JS and CSS files.
      */
-    protected function loadJSCSS() {
-        if (!GraphizmGallery::$js_and_css_loaded) {
+    protected function loadJSCSS()
+    {
+        if (! GraphizmGallery::$js_and_css_loaded) {
             GraphizmCore::instance()->addFiles($this->generateFilesToLoad());
             GraphizmGallery::$js_and_css_loaded = TRUE;
         }
@@ -432,57 +535,29 @@ class GraphizmGallery extends TemplateDefiner
     /**
      * Generates files to load.
      */
-    protected function generateFilesToLoad() {
+    protected function generateFilesToLoad()
+    {
         return array(
             array(
                 "type" => "js",
                 "path" => "src/Core/Gallery/resources/js/documentready.js",
-                "weight" => "500",
+                "weight" => "500"
             ),
             array(
                 "type" => "css",
                 "path" => "src/Core/Gallery/resources/css/style.css",
-                "weight" => "500",
+                "weight" => "500"
             ),
             array(
                 "type" => "js",
                 "path" => "src/Core/Gallery/vendors/shadowbox/shadowbox.js",
-                "weight" => "501",
+                "weight" => "501"
             ),
             array(
                 "type" => "css",
                 "path" => "src/Core/Gallery/vendors/shadowbox/shadowbox.css",
-                "weight" => "501",
-            ),
+                "weight" => "501"
+            )
         );
-    }
-}
-
-class AGallery extends GraphizmGallery
-{
-    protected $name;
-
-    /**
-     * Default constructor.
-     *
-     * @param string $template
-     *            le template à utiliser
-     * @return Gallery.Object
-     */
-    public function __construct($template = 1, $name)
-    {
-        $this->setTemplate($template);
-        $this->name = $name;
-    }
-
-    /**
-     * Main function.
-     * 
-     * @return string
-     */
-    public function launch()
-    {
-        $all = $this->getAllGalleriesNames();
-        return $this->displayGallery($this->name) . '<div style="clear:both;"></div>';
     }
 }

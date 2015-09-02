@@ -1,5 +1,5 @@
 <?php
-require_once 'TemplateDefiner.php';
+require_once 'ControllerDefiner.php';
 
 /**
  * This file contains all functions and design to display a template.
@@ -7,7 +7,7 @@ require_once 'TemplateDefiner.php';
  * 
  * @author Aurélien
  */
-final class GraphizmTemplater extends TemplateDefiner
+final class GraphizmController extends ControllerDefiner
 {
     /**
      * @var GraphizmHelper Instance
@@ -24,6 +24,9 @@ final class GraphizmTemplater extends TemplateDefiner
      */
     private $templateName = "";
 
+    protected $processorType = "";
+    protected $factoryList = array();
+
     /**
      * Default constructor.
      */
@@ -34,16 +37,16 @@ final class GraphizmTemplater extends TemplateDefiner
     /**
      * Gets current instance.
      *
-     * @return GraphizmTemplater
-     *   Instance of GraphizmTemplater
+     * @return GraphizmController
+     *   Instance of GraphizmController
      */
     public static function instance()
     {
-        if (empty(GraphizmTemplater::$instance)) {
-            GraphizmTemplater::$instance = new GraphizmTemplater();
+        if (empty(GraphizmController::$instance)) {
+            GraphizmController::$instance = new GraphizmController();
         }
 
-        return GraphizmTemplater::$instance;
+        return GraphizmController::$instance;
     }
 
     /**
