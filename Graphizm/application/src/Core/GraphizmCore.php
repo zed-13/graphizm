@@ -19,7 +19,7 @@ final class GraphizmCore
      */
     private static $environments = array(
         "dev",
-        "prod"
+        "prod",
     );
 
     /**

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Interface Graphizm Gallery.
+ *
+ * @author Aurélien
+ */
 interface GraphizmGalleryInterface
 {
     /**
@@ -187,9 +192,10 @@ class GraphizmGalleryModel implements GraphizmGalleryInterface
      * Get thumbnail uri.
      *
      * @param string $name
-     * Name of the thumbnail.
+     *   Name of the thumbnail.
      *
-     * @return string URI of the thumbnail to display.
+     * @return string
+     *   URI of the thumbnail to display.
      */
     public function getThumbnail($name)
     {
@@ -389,7 +395,7 @@ class GraphizmGalleryModel implements GraphizmGalleryInterface
      *
      * @param string $filepath
      *   File path.
-     *            
+     *
      * @return bool
      *   True if has to be created.
      */
@@ -445,17 +451,12 @@ class GraphizmGalleryModel implements GraphizmGalleryInterface
  * For huge volume of data, use another libray or use lazy loading.
  *
  * @TODO : create a command line to launch image generation via CLI.
- * @TODO : externalize in another class all the file based methods.
  *
  * @author Aurélien
  *
  */
 class GraphizmGallery extends ControllerDefiner
 {
-
-    /**
-     * Bool, says if we have to load js and css files.
-     */
     protected static $js_and_css_loaded = FALSE;
     protected static $instance = NULL;
     protected $processorType = "GraphizmGalleryModel";
@@ -517,7 +518,7 @@ class GraphizmGallery extends ControllerDefiner
             "gallery-single" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-single.tpl.php",
             "gallery-menu" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-menu.tpl.php",
             "gallery-thumbnail" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "Gallery-thumbnail.tpl.php",
-            "no-gallery" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "No-Gallery.tpl.php"
+            "no-gallery" => "src" . DS . "Core" . DS . "Gallery" . DS . "resources" . DS . "views" . DS . "No-Gallery.tpl.php",
         );
     }
 
@@ -541,22 +542,22 @@ class GraphizmGallery extends ControllerDefiner
             array(
                 "type" => "js",
                 "path" => "src/Core/Gallery/resources/js/documentready.js",
-                "weight" => "500"
+                "weight" => "500",
             ),
             array(
                 "type" => "css",
                 "path" => "src/Core/Gallery/resources/css/style.css",
-                "weight" => "500"
+                "weight" => "500",
             ),
             array(
                 "type" => "js",
                 "path" => "src/Core/Gallery/vendors/shadowbox/shadowbox.js",
-                "weight" => "501"
+                "weight" => "501",
             ),
             array(
                 "type" => "css",
                 "path" => "src/Core/Gallery/vendors/shadowbox/shadowbox.css",
-                "weight" => "501"
+                "weight" => "501",
             )
         );
     }
