@@ -113,12 +113,18 @@
                 </h3>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <?php if (!empty($zone["picture"]) && !empty($zone["content"])): ?>
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             <img alt="" src="<?php print $zone["picture"];?>" class="footer-div" />
                         </div>
                         <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                             <p class="footer-div"><?php print $zone["content"];?></p>
                         </div>
+                        <?php elseif(!empty($zone["picture"])): ?>
+                            <img alt="" src="<?php print $zone["picture"];?>" class="img-responsive" />
+                        <?php else: ?>
+                            <?php print $zone["content"];?>
+                        <?php endif;?>
                     </div>
                 </div>
                 

@@ -25,12 +25,29 @@ hr {
 .link-black:hover {
     color:#439bbd;
 }
+.borders {
+    border-top: 1px solid #343434;
+    border-bottom: 1px solid #343434;
+    display: block;
+    padding-bottom: 1px;
+    margin-bottom: 10px;
+    width: 100%;
+}
 .black-footer {
-    border-left: 2px dotted #343434;
-    border-right: 2px dotted #343434;
+    background-color: rgb(0, 0, 0);
+    /* RGBa with 0.6 opacity */
+    background-color: rgba(0, 0, 0, 0.1);
+    /* For IE 5.5 - 7*/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+    /* For IE 8*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+}
+.black-footer:hover {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 .footer-div {
     height: 100px;
+    text-align: left;
 }
 header h1 {
     font-size: 4.4em;

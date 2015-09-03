@@ -48,17 +48,17 @@ $conf = array(
         "zone_1" => array(
             "title" => "A propos",
             "picture" => "resources/images/footer-logo.png",
-            "content" => "Copyright 2011-2015 GraphiZm<br>Retrouvez moi sur <a href='https://github.com/zed-13' target='_blank' class='link-black'>Github</a>",
+            "content" => "Retrouvez moi sur <a href='https://github.com/zed-13' target='_blank' class='link-black'>Github</a>",
         ),
         "zone_2" => array(
-            "title" => "Technologies utilisés",
-            "picture" => "resources/images/footer-logo2.png",
-            "content" => "Bootstrap 3, jQuery, HTML5 shim, Respond.js, Spin.js, Shadowbox",
+            "title" => "",
+            "picture" => "",
+            "content" => "<span class='borders'></span>Copyright 2011-2015<img src='resources/images/logo.png' class='img-responsive' style='margin:auto;' /><span class='borders'></span>",
         ),
         "zone_3" => array(
-            "title" => "Dernier post",
-            "picture" => "",
-            "content" => "Lorem ipsum blablablabla",
+            "title" => "Technologies utilisés",
+            "picture" => "resources/images/footer-logo2.png",
+            "content" => "Bootstrap 3, jQuery, HTML5 shim, Respond.js, Spin.js, Shadowbox. Sur du PHP, JS, CSS et une pointe de HTML !",
         ),
     ),
     "gallery" => array(
