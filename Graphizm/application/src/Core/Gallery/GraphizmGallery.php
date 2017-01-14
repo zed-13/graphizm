@@ -216,15 +216,20 @@ class GraphizmGalleryModel implements GraphizmGalleryInterface
      */
     public function getAllGalleriesNames()
     {
-        $res = array();
-        $dir = opendir($this->basePath);
-        $dirname = $this->basePath;
-        while ($file = readdir($dir)) {
-            if ($file != '.' && $file != '..' && is_dir($dirname . $file)) {
-                $res[] = $file;
+        try {
+            $res = array();
+            if (is_dir($this->basePath)) {
+                $dir = opendir($this->basePath);
+                $dirname = $this->basePath;
+                while ($file = readdir($dir)) {
+                    if ($file != '.' && $file != '..' && is_dir($dirname . $file)) {
+                        $res[] = $file;
+                    }
+                }
+                closedir($dir);
             }
+        } catch (Exception $e) {
         }
-        closedir($dir);
         return $res;
     }
 
@@ -236,7 +241,7 @@ class GraphizmGalleryModel implements GraphizmGalleryInterface
      * @param bool $withGen
      *   TRUE if thumbnails are to be generated.
      */
-    protected function init_item($directory, $withGen = TRUE)
+    protected function init_item($directory, $withGen = FALSE)
     {
         $base = $this->basePath;
 

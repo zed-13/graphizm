@@ -14,7 +14,7 @@ $conf = array(
     "template_name_default" => "square-small",
     "introtext" => "GraphiZm, site personnel où j'expose mes créations et les oeuvres qui m'intéressent. Styles différents, souvent décalés, et toujours un même objectif: laisser libre cours à l'imagination. ",
     "contact-form" => array(
-        "to" => "random@random.com",
+        "to" => "aurelien.muller13@gmail.com",
         "intro" => "Un commentaire ? Un bug ? Laissez-moi votre message !",
     ),
     "menu_content" => array(

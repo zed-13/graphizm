@@ -107,7 +107,7 @@
                     $k = 1;
                     foreach($f as $zone):
                 ?>
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 <?php if ($k % 2 === 0) echo "black-footer";?>">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 <?php //if ($k % 2 === 0) echo "black-footer";?>">
                 <h3 class="footer-zone">
                     <?php print $zone["title"];?>
                 </h3>

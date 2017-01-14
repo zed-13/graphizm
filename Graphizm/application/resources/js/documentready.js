@@ -4,6 +4,18 @@
     var contact_form = function() {
         $('#form-contact').modal();
     };
+    var error_handler = function(r, error) {
+        var erreurs = "";
+        if (r.messages == undefined) {
+            erreurs += error;
+        } else {
+            for (var i = 0; i < r.messages.length; i++) {
+                erreurs += r.messages[i] + "<br>";
+            }
+        }
+        $("#form-contact-msg").html("");
+        $("#form-contact-msg").append('<div class="alert alert-danger alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4>Oops! Le mail n\'a pas été envoyé !</h4><p>' + erreurs + '</p></div>');
+    };
 
     $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip({"placement": "left"});
@@ -14,6 +26,14 @@
             $("#send-email-btn").prop("disabled", false);
             contact_form();
         });
+        
+        var ui_fixer = $(".gcaption");
+        if (ui_fixer.length <= 1) {
+            ui_fixer.hide();
+            $('.menu-gallery').hide();
+        }
+        
+        
         $("#send-email-btn").click(function() {
             var mail = $("#email-field").val(),
                 msg = $("#message-text").val(),
@@ -37,13 +57,12 @@
                     $("#send-email-btn").prop("disabled", true);
                 }
                 else {
-                    var erreurs = "";
-                    for (var i = 0; i < r.messages.length; i++) {
-                        erreurs += r.messages[i] + "<br>";
-                    }
-                    $("#form-contact-msg").html("");
-                    $("#form-contact-msg").append('<div class="alert alert-danger alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4>Oops! Le mail n\'a pas été envoyé !</h4><p>' + erreurs + '</p></div>');
+                    error_handler(r, 'Erreur inconnue');
                 }
+                spinner.stop();
+            })
+            .fail(function( jqXHR, textStatus ) {
+                error_handler({}, textStatus);
                 spinner.stop();
             });
         });

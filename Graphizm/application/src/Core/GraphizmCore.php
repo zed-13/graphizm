@@ -236,8 +236,8 @@ final class GraphizmCore
             "contact",
         );
         $r = "gallery";
-        $s = $_POST["state"];
-        if (isset($s)) {
+        if (isset($_POST["state"])) {
+            $s = $_POST["state"];
             if (in_array($s, $auth)) {
                 $r = $s;
             }
